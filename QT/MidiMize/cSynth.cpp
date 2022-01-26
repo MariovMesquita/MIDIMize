@@ -16,14 +16,15 @@ cSynth::cSynth()
 
     /* Load soundfonts */
 
-    /* Create AudioDriver */
+    /* Create Audio Driver */
     this->FsAudioDriver = new_fluid_audio_driver(this->FsSettings, this->FsSynth);
 
-    /* Create MidiDriver */
+    /* Create Midi Driver */
     this->FsMidiDriver = new_fluid_midi_driver(this->FsSettings, handle_midi_event, NULL);
 
 }
 
+/* Turns this synth chorus ON or OFF */
 void cSynth::chorusOnOff(bool onOff)
 {
     if(onOff == 1)
@@ -33,11 +34,13 @@ void cSynth::chorusOnOff(bool onOff)
         fluid_synth_set_chorus_on(this->FsSynth, 0);
 }
 
+/* Sets this synth chorus according to settings */
 void cSynth::chorusSet()
 {
     fluid_synth_set_chorus(this->FsSynth, this->synthChorus.Nr, this->synthChorus.Lvl, this->synthChorus.Speed, this->synthChorus.Depth, this->synthChorus.WaveType);
 }
 
+/* Turns this synth reverb ON or OFF */
 void cSynth::reverbOnOff(bool onOff)
 {
     if(onOff == 1)
@@ -47,7 +50,23 @@ void cSynth::reverbOnOff(bool onOff)
         fluid_synth_set_reverb_on(this->FsSynth, 0);
 }
 
+/* Sets this synth reverb according to settings */
 void cSynth::reverbSet()
 {
     fluid_synth_set_reverb(this->FsSynth, this->synthReverb.RoomSize, this->synthReverb.Damp, this->synthReverb.Width, this->synthReverb.Lvl);
+}
+
+cSynth::~cSynth()
+{
+    /* Remove Audio Driver */
+    delete_fluid_audio_driver(this->FsAudioDriver);
+
+    /* Remove MIDI Driver */
+    delete_fluid_midi_driver(this->FsMidiDriver);
+
+    /* Remove synth settings */
+    delete_fluid_settings(this->FsSettings);
+
+    /* Delete synth instance */
+    delete_fluid_synth(this->FsSynth);
 }

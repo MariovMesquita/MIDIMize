@@ -10,8 +10,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 HEADERS += \
     cSynth.h \
-    cmidimize.h
+    cmidimize.h \
+    cprotectedbuffer.h
 
 SOURCES += \
     cSynth.cpp \
-    cmidimize.cpp
+    cmidimize.cpp \
+    cprotectedbuffer.cpp
