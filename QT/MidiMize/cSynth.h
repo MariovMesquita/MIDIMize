@@ -7,10 +7,16 @@
 
 using namespace std;
 
+/* SYNTH INIT SETTINGS */
 #define FS_SAMPLE_RATE 44100.0
 #define FS_CPU_CORES 2
 #define FS_AUDIO_DRIVER "alsa"
 #define FS_MIDI_DRIVER "alsa_seq"
+
+/* SOUNDFONTS */
+#define SF_SINE_PATH "/etc/MidiMize/soundFonts/sine.sf2"
+#define SF_TRIANGLE_PATH "/etc/MidiMize/soundFonts/tri.sf2"
+#define SF_SAW_PATH "/etc/MidiMize/soundFonts/saw.sf2"
 
 //struct init_settings
 //{
@@ -24,8 +30,15 @@ using namespace std;
 enum oscillator_t
 {
     SINE,
-    SAW,
     TRIANGLE,
+    SAW,
+};
+
+struct sound_font_t
+{
+    string name;
+    const char* fileName;
+    int id;
 };
 
 struct chorus_settings_t
@@ -55,6 +68,7 @@ class cSynth
         fluid_midi_driver_t* FsMidiDriver;
         fluid_settings_t* FsSettings;
         fluid_synth_t* FsSynth;
+        sound_font_t sFonts[3];
 
         bool synthOn;
         int synthID;
@@ -74,7 +88,7 @@ class cSynth
         void noteOff(int chan, int key);
         void setReverb();
         void setChorus();
-        void setOscillator(chorus_settings_t chorus);
+        void setOscillator();
         void setGain();
         void setPitch();
 
