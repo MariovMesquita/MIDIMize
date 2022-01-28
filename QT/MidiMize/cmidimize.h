@@ -15,7 +15,14 @@ class CMidiMize
         CMidiMize();
 
     public:
-        static CMidiMize* getInstance();
+        static CMidiMize* getInstance()
+        {
+            if (!instance)
+            {
+                instance = new CMidiMize;
+                return instance;
+            }
+        }
         ~CMidiMize();
 
 };

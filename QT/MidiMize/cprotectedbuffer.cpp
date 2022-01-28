@@ -4,7 +4,7 @@ template <typename DataType>
 void CProtectedBuffer<DataType>::pushBuffer(DataType& toPush)
 {
     pthread_mutex_lock(&this->bufferMutex);
-    printf("I'm in push!\ntail:%d\nfront:%d\n", this->tail, this->front);
+    //printf("I'm in push!\ntail:%d\nfront:%d\n", this->tail, this->front);
     while(this->front == this->tail && this->frontOdd != this->tailOdd)
         pthread_cond_wait(&this->bufferNotFull, &this->bufferMutex);
     if(this->front == this->tail && this->frontOdd == this->tailOdd)
@@ -20,7 +20,7 @@ template <typename DataType>
 void CProtectedBuffer<DataType>::popBuffer(DataType& toPop)
 {
     pthread_mutex_lock(&this->bufferMutex);
-    printf("I'm in pop!\ntail:%d\nfront:%d\n", this->tail, this->front);
+    //printf("I'm in pop!\ntail:%d\nfront:%d\n", this->tail, this->front);
     while(this->front == this->tail && this->frontOdd == this->tailOdd)
         pthread_cond_wait(&this->bufferNotEmpty, &this->bufferMutex);
     if(this->front == this->tail && this->frontOdd != this->tailOdd)

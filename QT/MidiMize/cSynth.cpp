@@ -1,4 +1,5 @@
 #include "cSynth.h"
+#include <fluidsynth.h>
 
 using namespace std;
 
@@ -32,7 +33,7 @@ cSynth::cSynth()
     this->FsAudioDriver = new_fluid_audio_driver(this->FsSettings, this->FsSynth);
 
     /* Create Midi Driver */
-    this->FsMidiDriver = new_fluid_midi_driver(this->FsSettings, handle_midi_event, NULL);
+    //this->FsMidiDriver = new_fluid_midi_driver(this->FsSettings, handle_midi_event, NULL);
 
 }
 

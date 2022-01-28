@@ -9,11 +9,14 @@ CMidiMize::CMidiMize()
     }
 }
 
-CMidiMize* CMidiMize::getInstance()
-{
-    if (!instance)
-    {
-        instance = new CMidiMize;
-        return instance;
-    }
-}
+CMidiMize* CMidiMize::instance=0;
+
+//CMidiMize* CMidiMize::getInstance()
+//{
+//    if (!instance)
+//    {
+//        instance = new CMidiMize;
+//        return instance;
+//    }
+//}
+
