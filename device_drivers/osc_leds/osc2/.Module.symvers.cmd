@@ -1,0 +1,1 @@
+cmd_/home/mario/Documents/MidiMize/device_drivers/osc_leds/osc2/Module.symvers := sed 's/ko$$/o/' /home/mario/Documents/MidiMize/device_drivers/osc_leds/osc2/modules.order | scripts/mod/modpost -m -a   -o /home/mario/Documents/MidiMize/device_drivers/osc_leds/osc2/Module.symvers -e -i Module.symvers   -T -

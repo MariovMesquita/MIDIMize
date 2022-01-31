@@ -23,7 +23,10 @@ class CMidiMize
                 return instance;
             }
         }
-        ~CMidiMize();
+        ~CMidiMize()
+        {
+            delete instance;
+        }
 
 };
 

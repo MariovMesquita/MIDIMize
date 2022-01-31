@@ -1,0 +1,1 @@
+cmd_/home/mario/Documents/MidiMize/device_drivers/osc_leds/osc2/osc2_led_rpi4.mod := { echo  /home/mario/Documents/MidiMize/device_drivers/osc_leds/osc2/osc2_led_rpi4.o;  echo; } > /home/mario/Documents/MidiMize/device_drivers/osc_leds/osc2/osc2_led_rpi4.mod
