@@ -1197,7 +1197,9 @@ cgui.o: ../MidiMize/cgui.cpp ../../../../buildroot/buildroot-2021.02.5/output/ho
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cgui.o ../MidiMize/cgui.cpp
 
 cmidimize.o: ../MidiMize/cmidimize.cpp ../MidiMize/cmidimize.h \
-		../MidiMize/cSynth.h
+		../MidiMize/cSynth.h \
+		../MidiMize/cprotectedbuffer.h \
+		../MidiMize/tled.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cmidimize.o ../MidiMize/cmidimize.cpp
 
 cprotectedbuffer.o: ../MidiMize/cprotectedbuffer.cpp ../MidiMize/cprotectedbuffer.h
