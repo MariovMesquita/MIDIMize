@@ -16,18 +16,18 @@ cSynth::cSynth()
     this->FsSynth = new_fluid_synth(this->FsSettings);
 
     /* Load soundfonts */
+    /*SAW*/
+    this->sFonts[2].name="saw";
+    this->sFonts[2].fileName=SF_SAW_PATH;
+    this->sFonts[2].id = fluid_synth_sfload(this->FsSynth, this->sFonts[2].fileName, 1);
+    /*TRIANGLE*/
+    this->sFonts[1].name="triangle";
+    this->sFonts[1].fileName=SF_TRIANGLE_PATH;
+    this->sFonts[1].id = fluid_synth_sfload(this->FsSynth, this->sFonts[1].fileName, 1);
     /*SINE*/
     this->sFonts[0].name="sine";
     this->sFonts[0].fileName=SF_SINE_PATH;
     this->sFonts[0].id = fluid_synth_sfload(this->FsSynth, this->sFonts[0].fileName, 1);
-    /*TRIANGLE*/
-    this->sFonts[1].name="triangle";
-    this->sFonts[1].fileName=SF_TRIANGLE_PATH;
-    this->sFonts[1].id = fluid_synth_sfload(this->FsSynth, this->sFonts[0].fileName, 1);
-    /*SAW*/
-    this->sFonts[2].name="saw";
-    this->sFonts[2].fileName=SF_SAW_PATH;
-    this->sFonts[2].id = fluid_synth_sfload(this->FsSynth, this->sFonts[0].fileName, 1);
 
     /* Create Audio Driver */
     this->FsAudioDriver = new_fluid_audio_driver(this->FsSettings, this->FsSynth);
@@ -35,6 +35,30 @@ cSynth::cSynth()
     /* Create Midi Driver */
     //this->FsMidiDriver = new_fluid_midi_driver(this->FsSettings, handle_midi_event, NULL);
 
+    /* Init Values */
+    init_synth();
+
+}
+
+void cSynth::init_synth()
+{
+    this->synthOn = 0;
+    this->pitchBend = 0;
+    this->gain = 0;
+    this->oscillator = SINE;
+
+    this->chorus.active = 0;
+    this->chorus.nr = 0;
+    this->chorus.speed = 0;
+    this->chorus.lvl = 0;
+    this->chorus.depth = 0;
+    this->chorus.waveType = FLUID_CHORUS_MOD_SINE;
+
+    this->reverb.active = 0;
+    this->reverb.width = 0;
+    this->reverb.room = 0;
+    this->reverb.lvl = 0;
+    this->reverb.damp = 0;
 }
 
 /*
@@ -70,16 +94,18 @@ void cSynth::noteOff(int chan, int key)
  */
 void cSynth::setReverb()
 {
-    fluid_synth_set_reverb(this->FsSynth, this->reverb.room, this->reverb.damp, this->reverb.width, this->reverb.lvl);
-
     if(this->reverb.active == 1)
     {
+        //this->reverb.active=1;
         fluid_synth_set_reverb_on(this->FsSynth, 1);
     }
     else
     {
+        //this->reverb.active=0;
         fluid_synth_set_reverb_on(this->FsSynth, 0);
     }
+
+    fluid_synth_set_reverb(this->FsSynth, this->reverb.room, this->reverb.damp, this->reverb.width, this->reverb.lvl);
 }
 
 /*
@@ -95,10 +121,12 @@ void cSynth::setChorus()
 {
     if(this->chorus.active == 1)
     {
+        //this->chorus.active=1;
         fluid_synth_set_chorus_on(this->FsSynth, 1);
     }
     else
     {
+        //this->chorus.active=0;
         fluid_synth_set_chorus_on(this->FsSynth, 0);
     }
 
@@ -111,7 +139,7 @@ void cSynth::setChorus()
  */
 void cSynth::setGain(float gain)
 {
-    this->gain=gain;
+    this->gain = gain;
     fluid_synth_set_gain(this->FsSynth, this->gain);
 }
 
@@ -129,23 +157,23 @@ void cSynth::setPitch()
  * Changes synth oscillator (soundFont)
  * reloads a soundFont loaded at synth initialization
  */
-void cSynth::setOscillator(oscillator_t osc)
+void cSynth::setOscillator()
 {   
-    switch(osc)
+    switch(this->oscillator)
     {
         case SINE:
-            this->oscillator = SINE;
-            fluid_synth_sfreload(this->FsSynth, this->sFonts[0].id);
+            //this->oscillator = SINE;
+            fluid_synth_sfload(this->FsSynth, this->sFonts[0].fileName, 1);
             break;
 
         case TRIANGLE:
-            this->oscillator = TRIANGLE;
-            fluid_synth_sfreload(this->FsSynth, this->sFonts[1].id);
+            //this->oscillator = TRIANGLE;
+            fluid_synth_sfload(this->FsSynth, this->sFonts[1].fileName, 1);
             break;
 
         case SAW:
-            this->oscillator = SAW;
-            fluid_synth_sfreload(this->FsSynth, this->sFonts[2].id);
+            //this->oscillator = SAW;
+            fluid_synth_sfload(this->FsSynth, this->sFonts[2].fileName, 1);
             break;
     }
 }

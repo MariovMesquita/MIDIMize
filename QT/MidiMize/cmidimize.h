@@ -4,6 +4,10 @@
 #include "cSynth.h"
 #include "cprotectedbuffer.h"
 #include "tled.h"
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #define N_SYNTHS 2
 

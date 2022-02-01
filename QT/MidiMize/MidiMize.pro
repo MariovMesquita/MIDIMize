@@ -14,7 +14,7 @@ HEADERS += \
     cmidimize.h \
     cprotectedbuffer.h \
     tled.h \
-    ui_midimizeform.h
+    ui_MidiMizeForm.h
 
 SOURCES += \
     MidiMizeForm.cpp \

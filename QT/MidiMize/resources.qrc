@@ -9,4 +9,8 @@
         <file>sine.png</file>
         <file>1722168.png</file>
     </qresource>
+    <qresource prefix="/fonts">
+        <file>Syntha Nova Black.ttf</file>
+        <file>Syntha Nova.ttf</file>
+    </qresource>
 </RCC>

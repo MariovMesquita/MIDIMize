@@ -45,11 +45,11 @@ struct chorus_settings_t
 {
 
     float active;
-    float speed;
-    int nr;
-    float lvl;
-    float depth;
-    float waveType;
+    float speed;    // 0.0 - 5.0
+    int nr;         // 0 - 99
+    float lvl;      // 0.0 - 10.0
+    float depth;    // 0.0 - 21.0
+    float waveType; // FLUID_CHORUS_MOD_SINE, FLUID_CHORUS_MOD_TRIANGLE
 };
 
 struct reverb_settings_t
@@ -70,11 +70,8 @@ class cSynth
         fluid_synth_t* FsSynth;
         sound_font_t sFonts[3];
 
-        bool synthOn;
-        int synthID;
-
         float gain;
-        int pitchBend;
+
 
     public:
         cSynth();
@@ -84,13 +81,20 @@ class cSynth
         void noteOff(int chan, int key);
         void setReverb();
         void setChorus();
-        void setOscillator(oscillator_t osc);
+        void setOscillator();
         void setGain(float gain);
         void setPitch();
+        void init_synth();
 
+
+        // current note
+        //int synthID;
         chorus_settings_t chorus;
         reverb_settings_t reverb;
         oscillator_t oscillator;
+        int pitchBend;
+
+        bool synthOn;
 };
 
 #endif // CSYNTH_H
