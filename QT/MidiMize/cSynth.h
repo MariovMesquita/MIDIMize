@@ -85,15 +85,16 @@ class cSynth
         void setGain(float gain);
         void setPitch();
         void init_synth();
+        void handle_midi_event();
 
 
-        // current note
+
         //int synthID;
         chorus_settings_t chorus;
         reverb_settings_t reverb;
         oscillator_t oscillator;
         int pitchBend;
-
+        int current_note;
         bool synthOn;
 };
 

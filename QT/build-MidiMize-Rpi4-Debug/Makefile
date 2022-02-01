@@ -53,20 +53,24 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../MidiMize/MidiMizeForm.cpp \
+		../MidiMize/aboutForm.cpp \
 		../MidiMize/cSynth.cpp \
 		../MidiMize/cmidimize.cpp \
 		../MidiMize/cprotectedbuffer.cpp \
 		../MidiMize/main.cpp \
 		../MidiMize/tled.cpp qrc_resources.cpp \
-		moc_MidiMizeForm.cpp
+		moc_MidiMizeForm.cpp \
+		moc_aboutForm.cpp
 OBJECTS       = MidiMizeForm.o \
+		aboutForm.o \
 		cSynth.o \
 		cmidimize.o \
 		cprotectedbuffer.o \
 		main.o \
 		tled.o \
 		qrc_resources.o \
-		moc_MidiMizeForm.o
+		moc_MidiMizeForm.o \
+		moc_aboutForm.o
 DIST          = ../../../../buildroot/buildroot-2021.02.5/output/host/mkspecs/features/spec_pre.prf \
 		../../../../buildroot/buildroot-2021.02.5/output/host/mkspecs/common/unix.conf \
 		../../../../buildroot/buildroot-2021.02.5/output/host/mkspecs/common/linux.conf \
@@ -214,11 +218,14 @@ DIST          = ../../../../buildroot/buildroot-2021.02.5/output/host/mkspecs/fe
 		../../../../buildroot/buildroot-2021.02.5/output/host/mkspecs/features/yacc.prf \
 		../../../../buildroot/buildroot-2021.02.5/output/host/mkspecs/features/lex.prf \
 		../MidiMize/MidiMize.pro ../MidiMize/MidiMizeForm.h \
+		../MidiMize/aboutForm.h \
 		../MidiMize/cSynth.h \
 		../MidiMize/cmidimize.h \
 		../MidiMize/cprotectedbuffer.h \
 		../MidiMize/tled.h \
-		../MidiMize/ui_MidiMizeForm.h ../MidiMize/MidiMizeForm.cpp \
+		../MidiMize/ui_MidiMizeForm.h \
+		../MidiMize/ui_aboutForm.h ../MidiMize/MidiMizeForm.cpp \
+		../MidiMize/aboutForm.cpp \
 		../MidiMize/cSynth.cpp \
 		../MidiMize/cmidimize.cpp \
 		../MidiMize/cprotectedbuffer.cpp \
@@ -232,7 +239,7 @@ TARGET        = MidiMize
 first: all
 ####### Build rules
 
-MidiMize: ui_MidiMizeForm.h $(OBJECTS)  
+MidiMize: ui_MidiMizeForm.h ui_aboutForm.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: ../MidiMize/MidiMize.pro ../../../../buildroot/buildroot-2021.02.5/output/host/mkspecs/devices/linux-rasp-pi3-vc4-g++/qmake.conf ../../../../buildroot/buildroot-2021.02.5/output/host/mkspecs/features/spec_pre.prf \
@@ -548,9 +555,9 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../MidiMize/resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../buildroot/buildroot-2021.02.5/output/host/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../MidiMize/MidiMizeForm.h ../MidiMize/cSynth.h ../MidiMize/cmidimize.h ../MidiMize/cprotectedbuffer.h ../MidiMize/tled.h ../MidiMize/ui_MidiMizeForm.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../MidiMize/MidiMizeForm.cpp ../MidiMize/cSynth.cpp ../MidiMize/cmidimize.cpp ../MidiMize/cprotectedbuffer.cpp ../MidiMize/main.cpp ../MidiMize/tled.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../UI/MidiMizeForm.ui $(DISTDIR)/
+	$(COPY_FILE) --parents ../MidiMize/MidiMizeForm.h ../MidiMize/aboutForm.h ../MidiMize/cSynth.h ../MidiMize/cmidimize.h ../MidiMize/cprotectedbuffer.h ../MidiMize/tled.h ../MidiMize/ui_MidiMizeForm.h ../MidiMize/ui_aboutForm.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../MidiMize/MidiMizeForm.cpp ../MidiMize/aboutForm.cpp ../MidiMize/cSynth.cpp ../MidiMize/cmidimize.cpp ../MidiMize/cprotectedbuffer.cpp ../MidiMize/main.cpp ../MidiMize/tled.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../UI/MidiMizeForm.ui \ ../UI/aboutForm.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -582,8 +589,10 @@ qrc_resources.cpp: ../MidiMize/resources.qrc \
 		../MidiMize/1722168.png \
 		../MidiMize/sine.png \
 		../MidiMize/triangle.png \
+		../MidiMize/White&RedFull.png \
 		../MidiMize/Black&Red_full.png \
 		../MidiMize/Black&Red_logo.png \
+		../MidiMize/White&Red_mario.png \
 		../MidiMize/Black&Red_all.png \
 		../MidiMize/Syntha\ Nova\ Black.ttf \
 		../MidiMize/Syntha\ Nova.ttf
@@ -595,9 +604,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: ../../../../buildroot/buildroot-2021.02.5/output/host/mkspecs/features/data/dummy.cpp
 	/home/mario/buildroot/buildroot-2021.02.5/output/host/bin/arm-buildroot-linux-gnueabihf-g++ -march=armv8-a -mtune=cortex-a53 -mfpu=crypto-neon-fp-armv8 -mfloat-abi=hard --sysroot=/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot -g -Wall -Wextra -dM -E -o moc_predefs.h ../../../../buildroot/buildroot-2021.02.5/output/host/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_MidiMizeForm.cpp
+compiler_moc_header_make_all: moc_MidiMizeForm.cpp moc_aboutForm.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_MidiMizeForm.cpp
+	-$(DEL_FILE) moc_MidiMizeForm.cpp moc_aboutForm.cpp
 moc_MidiMizeForm.cpp: ../MidiMize/MidiMizeForm.h \
 		../MidiMize/ui_MidiMizeForm.h \
 		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/QVariant \
@@ -744,16 +753,142 @@ moc_MidiMizeForm.cpp: ../MidiMize/MidiMizeForm.h \
 		../../../../buildroot/buildroot-2021.02.5/output/host/bin/moc
 	/home/mario/buildroot/buildroot-2021.02.5/output/host/bin/moc $(DEFINES) --include /home/mario/Documents/MidiMize/QT/build-MidiMize-Rpi4-Debug/moc_predefs.h -I/home/mario/buildroot/buildroot-2021.02.5/output/host/mkspecs/devices/linux-rasp-pi3-vc4-g++ -I/home/mario/Documents/MidiMize/QT/MidiMize -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5 -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore -I. -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/include/c++/9.4.0 -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/include/c++/9.4.0/arm-buildroot-linux-gnueabihf -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/include/c++/9.4.0/backward -I/home/mario/buildroot/buildroot-2021.02.5/output/host/lib/gcc/arm-buildroot-linux-gnueabihf/9.4.0/include -I/home/mario/buildroot/buildroot-2021.02.5/output/host/lib/gcc/arm-buildroot-linux-gnueabihf/9.4.0/include-fixed -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/include -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include ../MidiMize/MidiMizeForm.h -o moc_MidiMizeForm.cpp
 
+moc_aboutForm.cpp: ../MidiMize/aboutForm.h \
+		../MidiMize/ui_aboutForm.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/QVariant \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qvariant.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qatomic.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qglobal.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qconfig-bootstrapped.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qconfig.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qtcore-config.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qsystemdetection.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qprocessordetection.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qcompilerdetection.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qtypeinfo.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qsysinfo.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qlogging.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qflags.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qglobalstatic.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qmutex.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qnumeric.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qversiontagging.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qbasicatomic.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qgenericatomic.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qatomic_msvc.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qbytearray.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qrefcount.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qnamespace.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qarraydata.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qlist.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qalgorithms.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qiterator.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qhashfunctions.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qstring.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qchar.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qstringliteral.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qstringalgorithms.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qstringview.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qstringbuilder.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qpair.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qvector.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qcontainertools_impl.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qpoint.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qbytearraylist.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qstringlist.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qregexp.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qstringmatcher.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qmetatype.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qvarlengtharray.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qcontainerfwd.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qobjectdefs.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qmap.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qdebug.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qhash.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qtextstream.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qiodevice.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qobject.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qcoreevent.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qscopedpointer.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qobject_impl.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qlocale.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qshareddata.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qset.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qcontiguouscache.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qsharedpointer.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/QApplication \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qapplication.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qtwidgetsglobal.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qtguiglobal.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qtgui-config.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qtwidgets-config.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qcoreapplication.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qeventloop.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qwindowdefs.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qsize.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qmargins.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qcursor.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qwidget.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qpaintdevice.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qrect.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qpalette.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qcolor.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qrgb.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qrgba64.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qbrush.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qmatrix.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qpolygon.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qregion.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qdatastream.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qline.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qtransform.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qimage.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qpixelformat.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qpixmap.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qfont.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qfontmetrics.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qfontinfo.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qkeysequence.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qevent.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qurl.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qurlquery.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qfile.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qfiledevice.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qvector2d.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qtouchdevice.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qguiapplication.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qinputmethod.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/QDialog \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qdialog.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/QLabel \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qlabel.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qframe.h \
+		moc_predefs.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/bin/moc
+	/home/mario/buildroot/buildroot-2021.02.5/output/host/bin/moc $(DEFINES) --include /home/mario/Documents/MidiMize/QT/build-MidiMize-Rpi4-Debug/moc_predefs.h -I/home/mario/buildroot/buildroot-2021.02.5/output/host/mkspecs/devices/linux-rasp-pi3-vc4-g++ -I/home/mario/Documents/MidiMize/QT/MidiMize -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5 -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore -I. -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/include/c++/9.4.0 -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/include/c++/9.4.0/arm-buildroot-linux-gnueabihf -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/include/c++/9.4.0/backward -I/home/mario/buildroot/buildroot-2021.02.5/output/host/lib/gcc/arm-buildroot-linux-gnueabihf/9.4.0/include -I/home/mario/buildroot/buildroot-2021.02.5/output/host/lib/gcc/arm-buildroot-linux-gnueabihf/9.4.0/include-fixed -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/include -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include ../MidiMize/aboutForm.h -o moc_aboutForm.cpp
+
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_MidiMizeForm.h
+compiler_uic_make_all: ui_MidiMizeForm.h ui_aboutForm.h
 compiler_uic_clean:
-	-$(DEL_FILE) ui_MidiMizeForm.h
+	-$(DEL_FILE) ui_MidiMizeForm.h ui_aboutForm.h
 ui_MidiMizeForm.h: ../UI/MidiMizeForm.ui \
 		../../../../buildroot/buildroot-2021.02.5/output/host/bin/uic
 	/home/mario/buildroot/buildroot-2021.02.5/output/host/bin/uic ../UI/MidiMizeForm.ui -o ui_MidiMizeForm.h
+
+
+ui_aboutForm.h: ../UI/aboutForm.ui \
+		../../../../buildroot/buildroot-2021.02.5/output/host/bin/uic
+	/home/mario/buildroot/buildroot-2021.02.5/output/host/bin/uic ../UI/aboutForm.ui -o ui_aboutForm.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -906,8 +1041,132 @@ MidiMizeForm.o: ../MidiMize/MidiMizeForm.cpp ../MidiMize/MidiMizeForm.h \
 		../MidiMize/cmidimize.h \
 		../MidiMize/cSynth.h \
 		../MidiMize/cprotectedbuffer.h \
-		../MidiMize/tled.h
+		../MidiMize/tled.h \
+		../MidiMize/aboutForm.h \
+		../MidiMize/ui_aboutForm.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/QDialog \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qdialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o MidiMizeForm.o ../MidiMize/MidiMizeForm.cpp
+
+aboutForm.o: ../MidiMize/aboutForm.cpp ../MidiMize/aboutForm.h \
+		../MidiMize/ui_aboutForm.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/QVariant \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qvariant.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qatomic.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qglobal.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qconfig-bootstrapped.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qconfig.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qtcore-config.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qsystemdetection.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qprocessordetection.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qcompilerdetection.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qtypeinfo.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qsysinfo.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qlogging.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qflags.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qglobalstatic.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qmutex.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qnumeric.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qversiontagging.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qbasicatomic.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qgenericatomic.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qatomic_msvc.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qbytearray.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qrefcount.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qnamespace.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qarraydata.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qlist.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qalgorithms.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qiterator.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qhashfunctions.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qstring.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qchar.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qstringliteral.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qstringalgorithms.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qstringview.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qstringbuilder.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qpair.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qvector.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qcontainertools_impl.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qpoint.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qbytearraylist.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qstringlist.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qregexp.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qstringmatcher.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qmetatype.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qvarlengtharray.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qcontainerfwd.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qobjectdefs.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qmap.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qdebug.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qhash.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qtextstream.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qiodevice.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qobject.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qcoreevent.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qscopedpointer.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qobject_impl.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qlocale.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qshareddata.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qset.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qcontiguouscache.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qsharedpointer.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/QApplication \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qapplication.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qtwidgetsglobal.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qtguiglobal.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qtgui-config.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qtwidgets-config.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qcoreapplication.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qeventloop.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qwindowdefs.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qsize.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qmargins.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qcursor.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qdesktopwidget.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qwidget.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qpaintdevice.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qrect.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qpalette.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qcolor.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qrgb.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qrgba64.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qbrush.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qmatrix.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qpolygon.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qregion.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qdatastream.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qline.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qtransform.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qimage.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qpixelformat.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qpixmap.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qfont.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qfontmetrics.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qfontinfo.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qsizepolicy.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qkeysequence.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qevent.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qurl.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qurlquery.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qfile.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qfiledevice.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qvector2d.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qtouchdevice.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qguiapplication.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui/qinputmethod.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/QDialog \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qdialog.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/QLabel \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qlabel.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qframe.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/QWidget
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o aboutForm.o ../MidiMize/aboutForm.cpp
 
 cSynth.o: ../MidiMize/cSynth.cpp ../MidiMize/cSynth.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cSynth.o ../MidiMize/cSynth.cpp
@@ -1064,7 +1323,11 @@ main.o: ../MidiMize/main.cpp ../../../../buildroot/buildroot-2021.02.5/output/ho
 		../MidiMize/cmidimize.h \
 		../MidiMize/cSynth.h \
 		../MidiMize/cprotectedbuffer.h \
-		../MidiMize/tled.h
+		../MidiMize/tled.h \
+		../MidiMize/aboutForm.h \
+		../MidiMize/ui_aboutForm.h \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/QDialog \
+		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qdialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../MidiMize/main.cpp
 
 tled.o: ../MidiMize/tled.cpp ../MidiMize/tled.h \
@@ -1076,6 +1339,9 @@ qrc_resources.o: qrc_resources.cpp
 
 moc_MidiMizeForm.o: moc_MidiMizeForm.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_MidiMizeForm.o moc_MidiMizeForm.cpp
+
+moc_aboutForm.o: moc_aboutForm.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_aboutForm.o moc_aboutForm.cpp
 
 ####### Install
 

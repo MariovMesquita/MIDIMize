@@ -45,6 +45,10 @@ private slots:
     void on_osc1ChorusDepth_valueChanged(int value);
     void on_osc1ChorusLvl_valueChanged(int value);
     void on_osc1ChorusSpeed_valueChanged(int value);
+    void on_aboutButton_clicked();
+
+    void on_midiRbutton_clicked(bool checked);
+    void on_soloRbutton_clicked(bool checked);
 };
 
 

@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #define N_SYNTHS 2
 
@@ -15,6 +16,7 @@ struct QtWrapper
 {
     CProtectedBuffer<ledCommand_t>* led_ctrl;
     cSynth* synth[2];
+    bool* solo;
 };
 
 class CMidiMize
@@ -24,6 +26,7 @@ class CMidiMize
         cSynth synths [N_SYNTHS];
         TLed led_thread;
         bool soloMode;
+
 
         CMidiMize(QtWrapper &QtWrap);
 

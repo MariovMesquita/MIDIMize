@@ -611,7 +611,7 @@ public:
         logoWidget->setGeometry(QRect(0, 0, 181, 221));
         aboutButton = new QPushButton(logoWidget);
         aboutButton->setObjectName(QString::fromUtf8("aboutButton"));
-        aboutButton->setGeometry(QRect(70, 0, 51, 23));
+        aboutButton->setGeometry(QRect(65, 0, 61, 23));
         QFont font3;
         font3.setFamily(QString::fromUtf8("Syntha Nova"));
         font3.setPointSize(9);

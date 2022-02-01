@@ -3,6 +3,14 @@
 
 #include <pthread.h>
 #include "cprotectedbuffer.h"
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#define BLK _IOW('a', 'b', int32_t*)
+#define PWR _IOW('a', 'p', int32_t*)
 
 /* f = 440 . 2 ^ (n-69)/12 - Tuning based on A4 = 440Hz */
 static const float noteFreqs[128] = {8.18, 8.66, 9.18, 9.72, 10.30, 10.91, 11.56, 12.25, 12.98, 13.75, 14.57,
@@ -17,6 +25,7 @@ static const float noteFreqs[128] = {8.18, 8.66, 9.18, 9.72, 10.30, 10.91, 11.56
                                     3520.00, 3729.31, 3951.07, 4186.01, 4434.92, 4698.64, 4978.03, 5274.04, 5587.65, 5919.91, 6271.93, 6644.88,
                                     7040.00, 7458.62, 7902.13, 8372.02, 8869.84, 9397.27, 9956.06, 10548.08, 11175.30, 11839.82, 12543.85};
 
+enum lCmd { OSC_1_ON, OSC_1_OFF, OSC_1_BLK, OSC_2_ON, OSC_2_OFF, OSC_2_BLK, PWR_ON, PWR_OFF };
 
 
 //enum noteNames { A0=21, Bb0, B0, Db1, D1, Eb1, E1, F1, Gb1, G1, Ab1,
@@ -33,7 +42,7 @@ static const float noteFreqs[128] = {8.18, 8.66, 9.18, 9.72, 10.30, 10.91, 11.56
 struct ledCommand_t
 {
     int note;
-    char* led_cmd;
+    lCmd led_cmd;
 };
 
 class TLed
@@ -45,7 +54,6 @@ class TLed
         void*(*job)(void*);
     public:
         TLed(CProtectedBuffer<ledCommand_t>* led_cmds, void*(*job) (void*));
-        ~TLed();
         int create();
         int join();
         int exit();

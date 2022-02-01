@@ -3,6 +3,8 @@
         <file>Black&amp;Red_logo.png</file>
         <file>Black&amp;Red_full.png</file>
         <file>Black&amp;Red_all.png</file>
+        <file>White&amp;Red_mario.png</file>
+        <file>White&amp;RedFull.png</file>
     </qresource>
     <qresource prefix="/new/waveIcons">
         <file>triangle.png</file>
