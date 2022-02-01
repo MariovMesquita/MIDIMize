@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'MidiMize.ui'
+** Form generated from reading UI file 'MidiMizeForm.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.15.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef UI_MIDIMIZE_H
-#define UI_MIDIMIZE_H
+#ifndef UI_MIDIMIZEFORM_H
+#define UI_MIDIMIZEFORM_H
 
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
@@ -25,7 +25,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_MainWindow
+class Ui_MidiMizeForm
 {
 public:
     QWidget *centralwidget;
@@ -110,13 +110,13 @@ public:
     QLabel *logo;
     QStatusBar *statusbar;
 
-    void setupUi(QMainWindow *MainWindow)
+    void setupUi(QMainWindow *MidiMizeForm)
     {
-        if (MainWindow->objectName().isEmpty())
-            MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->setWindowModality(Qt::ApplicationModal);
-        MainWindow->setEnabled(true);
-        MainWindow->resize(1024, 600);
+        if (MidiMizeForm->objectName().isEmpty())
+            MidiMizeForm->setObjectName(QString::fromUtf8("MidiMizeForm"));
+        MidiMizeForm->setWindowModality(Qt::ApplicationModal);
+        MidiMizeForm->setEnabled(true);
+        MidiMizeForm->resize(1024, 600);
         QPalette palette;
         QBrush brush(QColor(0, 0, 0, 255));
         brush.setStyle(Qt::SolidPattern);
@@ -192,17 +192,17 @@ public:
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
         palette.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush9);
 #endif
-        MainWindow->setPalette(palette);
-        MainWindow->setMouseTracking(false);
-        MainWindow->setContextMenuPolicy(Qt::NoContextMenu);
-        MainWindow->setAcceptDrops(false);
-        MainWindow->setAutoFillBackground(true);
-        MainWindow->setToolButtonStyle(Qt::ToolButtonIconOnly);
-        MainWindow->setAnimated(true);
-        MainWindow->setTabShape(QTabWidget::Rounded);
-        MainWindow->setDockNestingEnabled(false);
-        MainWindow->setUnifiedTitleAndToolBarOnMac(false);
-        centralwidget = new QWidget(MainWindow);
+        MidiMizeForm->setPalette(palette);
+        MidiMizeForm->setMouseTracking(false);
+        MidiMizeForm->setContextMenuPolicy(Qt::NoContextMenu);
+        MidiMizeForm->setAcceptDrops(false);
+        MidiMizeForm->setAutoFillBackground(true);
+        MidiMizeForm->setToolButtonStyle(Qt::ToolButtonIconOnly);
+        MidiMizeForm->setAnimated(true);
+        MidiMizeForm->setTabShape(QTabWidget::Rounded);
+        MidiMizeForm->setDockNestingEnabled(false);
+        MidiMizeForm->setUnifiedTitleAndToolBarOnMac(false);
+        centralwidget = new QWidget(MidiMizeForm);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         hLine1 = new QFrame(centralwidget);
         hLine1->setObjectName(QString::fromUtf8("hLine1"));
@@ -557,7 +557,7 @@ public:
         logo->setAutoFillBackground(false);
         logo->setPixmap(QPixmap(QString::fromUtf8("../../mdmz_logo/Black&Red_all.png")));
         logo->setScaledContents(true);
-        MainWindow->setCentralWidget(centralwidget);
+        MidiMizeForm->setCentralWidget(centralwidget);
         osc1ReverbWidget->raise();
         hLine1->raise();
         vLine4->raise();
@@ -574,48 +574,48 @@ public:
         osc1Widget->raise();
         gainWidget->raise();
         logoWidget->raise();
-        statusbar = new QStatusBar(MainWindow);
+        statusbar = new QStatusBar(MidiMizeForm);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
         statusbar->setEnabled(true);
-        MainWindow->setStatusBar(statusbar);
+        MidiMizeForm->setStatusBar(statusbar);
 
-        retranslateUi(MainWindow);
+        retranslateUi(MidiMizeForm);
 
         osc2Pbutton->setDefault(false);
         osc1Pbutton->setDefault(false);
 
 
-        QMetaObject::connectSlotsByName(MainWindow);
+        QMetaObject::connectSlotsByName(MidiMizeForm);
     } // setupUi
 
-    void retranslateUi(QMainWindow *MainWindow)
+    void retranslateUi(QMainWindow *MidiMizeForm)
     {
-        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        osc1ChorusNrLabel->setText(QCoreApplication::translate("MainWindow", "Nr", nullptr));
-        osc1ChorusDepthLabel->setText(QCoreApplication::translate("MainWindow", "Depth", nullptr));
-        osc1ChorusSpeedLabel->setText(QCoreApplication::translate("MainWindow", "Speed", nullptr));
-        osc1ChorusLvlLabel->setText(QCoreApplication::translate("MainWindow", "Level", nullptr));
+        MidiMizeForm->setWindowTitle(QCoreApplication::translate("MidiMizeForm", "MainWindow", nullptr));
+        osc1ChorusNrLabel->setText(QCoreApplication::translate("MidiMizeForm", "Nr", nullptr));
+        osc1ChorusDepthLabel->setText(QCoreApplication::translate("MidiMizeForm", "Depth", nullptr));
+        osc1ChorusSpeedLabel->setText(QCoreApplication::translate("MidiMizeForm", "Speed", nullptr));
+        osc1ChorusLvlLabel->setText(QCoreApplication::translate("MidiMizeForm", "Level", nullptr));
         osc1ChorusEnable->setText(QString());
-        osc1ChorusEnableLabel->setText(QCoreApplication::translate("MainWindow", "CHORUS", nullptr));
-        osc2ReverbWidthLabel->setText(QCoreApplication::translate("MainWindow", "Width", nullptr));
-        osc2ReverbRoomLabel->setText(QCoreApplication::translate("MainWindow", "Room", nullptr));
-        osc2ReverbLvlLabel->setText(QCoreApplication::translate("MainWindow", "Level", nullptr));
-        osc2ReverbDampLabel->setText(QCoreApplication::translate("MainWindow", "Damp", nullptr));
+        osc1ChorusEnableLabel->setText(QCoreApplication::translate("MidiMizeForm", "CHORUS", nullptr));
+        osc2ReverbWidthLabel->setText(QCoreApplication::translate("MidiMizeForm", "Width", nullptr));
+        osc2ReverbRoomLabel->setText(QCoreApplication::translate("MidiMizeForm", "Room", nullptr));
+        osc2ReverbLvlLabel->setText(QCoreApplication::translate("MidiMizeForm", "Level", nullptr));
+        osc2ReverbDampLabel->setText(QCoreApplication::translate("MidiMizeForm", "Damp", nullptr));
         osc2ReverbEnable->setText(QString());
-        osc2ReverbEnableLabel->setText(QCoreApplication::translate("MainWindow", "REVERB", nullptr));
-        osc2ChorusNrLabel->setText(QCoreApplication::translate("MainWindow", "Nr", nullptr));
-        osc2ChorusDepthLabel->setText(QCoreApplication::translate("MainWindow", "Depth", nullptr));
-        osc2ChorusSpeedLabel->setText(QCoreApplication::translate("MainWindow", "Speed", nullptr));
-        osc2ChorusLvlLabel->setText(QCoreApplication::translate("MainWindow", "Level", nullptr));
+        osc2ReverbEnableLabel->setText(QCoreApplication::translate("MidiMizeForm", "REVERB", nullptr));
+        osc2ChorusNrLabel->setText(QCoreApplication::translate("MidiMizeForm", "Nr", nullptr));
+        osc2ChorusDepthLabel->setText(QCoreApplication::translate("MidiMizeForm", "Depth", nullptr));
+        osc2ChorusSpeedLabel->setText(QCoreApplication::translate("MidiMizeForm", "Speed", nullptr));
+        osc2ChorusLvlLabel->setText(QCoreApplication::translate("MidiMizeForm", "Level", nullptr));
         osc2ChorusEnable->setText(QString());
-        osc2ChorusEnableLabel->setText(QCoreApplication::translate("MainWindow", "CHORUS", nullptr));
-        osc1ReverbWidthLabel->setText(QCoreApplication::translate("MainWindow", "Width", nullptr));
-        osc1ReverbRoomLabel->setText(QCoreApplication::translate("MainWindow", "Room", nullptr));
-        osc1ReverbLvlLabel->setText(QCoreApplication::translate("MainWindow", "Level", nullptr));
-        osc1ReverbDampLabel->setText(QCoreApplication::translate("MainWindow", "Damp", nullptr));
+        osc2ChorusEnableLabel->setText(QCoreApplication::translate("MidiMizeForm", "CHORUS", nullptr));
+        osc1ReverbWidthLabel->setText(QCoreApplication::translate("MidiMizeForm", "Width", nullptr));
+        osc1ReverbRoomLabel->setText(QCoreApplication::translate("MidiMizeForm", "Room", nullptr));
+        osc1ReverbLvlLabel->setText(QCoreApplication::translate("MidiMizeForm", "Level", nullptr));
+        osc1ReverbDampLabel->setText(QCoreApplication::translate("MidiMizeForm", "Damp", nullptr));
         osc1ReverbEnable->setText(QString());
-        osc1ReverbEnableLabel->setText(QCoreApplication::translate("MainWindow", "REVERB", nullptr));
-        osc2Label->setText(QCoreApplication::translate("MainWindow", "OSC2", nullptr));
+        osc1ReverbEnableLabel->setText(QCoreApplication::translate("MidiMizeForm", "REVERB", nullptr));
+        osc2Label->setText(QCoreApplication::translate("MidiMizeForm", "OSC2", nullptr));
         osc2SineRbutton->setText(QString());
         osc2TriRbutton->setText(QString());
         osc2SawRbutton->setText(QString());
@@ -624,11 +624,11 @@ public:
         osc1TriRbutton->setText(QString());
         osc1SawRbutton->setText(QString());
         osc1Pbutton->setText(QString());
-        osc1Label->setText(QCoreApplication::translate("MainWindow", "OSC1", nullptr));
-        gainLabel->setText(QCoreApplication::translate("MainWindow", "GAIN", nullptr));
-        soloRbutton->setText(QCoreApplication::translate("MainWindow", "SOLO", nullptr));
-        midiRbutton->setText(QCoreApplication::translate("MainWindow", "MIDI", nullptr));
-        aboutButton->setText(QCoreApplication::translate("MainWindow", "ABOUT", nullptr));
+        osc1Label->setText(QCoreApplication::translate("MidiMizeForm", "OSC1", nullptr));
+        gainLabel->setText(QCoreApplication::translate("MidiMizeForm", "GAIN", nullptr));
+        soloRbutton->setText(QCoreApplication::translate("MidiMizeForm", "SOLO", nullptr));
+        midiRbutton->setText(QCoreApplication::translate("MidiMizeForm", "MIDI", nullptr));
+        aboutButton->setText(QCoreApplication::translate("MidiMizeForm", "ABOUT", nullptr));
         label->setText(QString());
         logo->setText(QString());
     } // retranslateUi
@@ -636,9 +636,9 @@ public:
 };
 
 namespace Ui {
-    class MainWindow: public Ui_MainWindow {};
+    class MidiMizeForm: public Ui_MidiMizeForm {};
 } // namespace Ui
 
 QT_END_NAMESPACE
 
-#endif // UI_MIDIMIZE_H
+#endif // UI_MIDIMIZEFORM_H

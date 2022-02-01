@@ -10,7 +10,7 @@
 #include <linux/timer.h> // kernel timers
 #include <linux/ioctl.h>
 
-#define GPIO_OSC2_LED 21
+#define GPIO_OSC2_LED 23
 
 #define BLK _IOW('a', 'b', int32_t*)
 #define PWR _IOW('a', 'p', int32_t*)

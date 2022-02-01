@@ -177,6 +177,7 @@ static int __init pwr_led_init(void)
 
  static void __exit pwr_led_exit(void)
  {
+    gpio_set_value(GPIO_PWR_LED, 0);
     gpio_unexport(GPIO_PWR_LED);
     gpio_free(GPIO_PWR_LED);
     device_destroy(dev_class, dev);

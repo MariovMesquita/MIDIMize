@@ -1,1 +1,12 @@
-<RCC/>
+<RCC>
+    <qresource prefix="/new/logos">
+        <file>Black&amp;Red_logo.png</file>
+        <file>Black&amp;Red_full.png</file>
+        <file>Black&amp;Red_all.png</file>
+    </qresource>
+    <qresource prefix="/new/waveIcons">
+        <file>triangle.png</file>
+        <file>sine.png</file>
+        <file>1722168.png</file>
+    </qresource>
+</RCC>

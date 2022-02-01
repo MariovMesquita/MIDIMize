@@ -70,6 +70,8 @@ void cSynth::noteOff(int chan, int key)
  */
 void cSynth::setReverb()
 {
+    fluid_synth_set_reverb(this->FsSynth, this->reverb.room, this->reverb.damp, this->reverb.width, this->reverb.lvl);
+
     if(this->reverb.active == 1)
     {
         fluid_synth_set_reverb_on(this->FsSynth, 1);
@@ -78,8 +80,6 @@ void cSynth::setReverb()
     {
         fluid_synth_set_reverb_on(this->FsSynth, 0);
     }
-
-    fluid_synth_set_reverb(this->FsSynth, this->reverb.room, this->reverb.damp, this->reverb.width, this->reverb.lvl);
 }
 
 /*
@@ -109,8 +109,9 @@ void cSynth::setChorus()
  * Sets synth gain
  * range 0.0 - 10.0
  */
-void cSynth::setGain()
+void cSynth::setGain(float gain)
 {
+    this->gain=gain;
     fluid_synth_set_gain(this->FsSynth, this->gain);
 }
 
@@ -128,19 +129,22 @@ void cSynth::setPitch()
  * Changes synth oscillator (soundFont)
  * reloads a soundFont loaded at synth initialization
  */
-void cSynth::setOscillator()
-{
-    switch(this->oscillator)
+void cSynth::setOscillator(oscillator_t osc)
+{   
+    switch(osc)
     {
         case SINE:
+            this->oscillator = SINE;
             fluid_synth_sfreload(this->FsSynth, this->sFonts[0].id);
             break;
 
         case TRIANGLE:
+            this->oscillator = TRIANGLE;
             fluid_synth_sfreload(this->FsSynth, this->sFonts[1].id);
             break;
 
         case SAW:
+            this->oscillator = SAW;
             fluid_synth_sfreload(this->FsSynth, this->sFonts[2].id);
             break;
     }

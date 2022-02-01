@@ -7,6 +7,12 @@
 
 #define N_SYNTHS 2
 
+struct QtWrapper
+{
+    CProtectedBuffer<ledCommand_t>* led_ctrl;
+    cSynth* synth[2];
+};
+
 class CMidiMize
 {
     private:
@@ -15,16 +21,16 @@ class CMidiMize
         TLed led_thread;
         bool soloMode;
 
-        CMidiMize();
+        CMidiMize(QtWrapper &QtWrap);
 
     public:
-        static CMidiMize* getInstance()
+        static CMidiMize* getInstance(QtWrapper &QtWrap)
         {
             if (!instance)
             {
-                instance = new CMidiMize;
-                return instance;
+                instance = new CMidiMize(QtWrap);
             }
+            return instance;
         }
 
         ~CMidiMize()

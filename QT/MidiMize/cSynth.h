@@ -14,9 +14,9 @@ using namespace std;
 #define FS_MIDI_DRIVER "alsa_seq"
 
 /* SOUNDFONTS */
-#define SF_SINE_PATH "/etc/MidiMize/soundFonts/sine.sf2"
-#define SF_TRIANGLE_PATH "/etc/MidiMize/soundFonts/tri.sf2"
-#define SF_SAW_PATH "/etc/MidiMize/soundFonts/saw.sf2"
+#define SF_SINE_PATH "/etc/MIDImize/soundFonts/sine.sf2"
+#define SF_TRIANGLE_PATH "/etc/MIDImize/soundFonts/tri.sf2"
+#define SF_SAW_PATH "/etc/MIDImize/soundFonts/saw.sf2"
 
 //struct init_settings
 //{
@@ -73,10 +73,6 @@ class cSynth
         bool synthOn;
         int synthID;
 
-
-        chorus_settings_t chorus;
-        reverb_settings_t reverb;
-        oscillator_t oscillator;
         float gain;
         int pitchBend;
 
@@ -88,10 +84,13 @@ class cSynth
         void noteOff(int chan, int key);
         void setReverb();
         void setChorus();
-        void setOscillator();
-        void setGain();
+        void setOscillator(oscillator_t osc);
+        void setGain(float gain);
         void setPitch();
 
+        chorus_settings_t chorus;
+        reverb_settings_t reverb;
+        oscillator_t oscillator;
 };
 
 #endif // CSYNTH_H
