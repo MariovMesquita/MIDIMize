@@ -14,9 +14,13 @@ using namespace std;
 #define FS_MIDI_DRIVER "alsa_seq"
 
 /* SOUNDFONTS */
-#define SF_SINE_PATH "/etc/MIDImize/soundFonts/sine.sf2"
-#define SF_TRIANGLE_PATH "/etc/MIDImize/soundFonts/tri.sf2"
-#define SF_SAW_PATH "/etc/MIDImize/soundFonts/saw.sf2"
+//#define SF_SINE_PATH "/etc/MIDImize/soundFonts/sine.sf2"
+//#define SF_TRIANGLE_PATH "/etc/MIDImize/soundFonts/tri.sf2"
+//#define SF_SAW_PATH "/etc/MIDImize/soundFonts/saw.sf2"
+
+#define SF_SINE_PATH "/etc/MIDImize/soundFonts/test/JR_Cosmic.SF2"
+#define SF_TRIANGLE_PATH "/etc/MIDImize/soundFonts/test/JR_ambiance1.sf2"
+#define SF_SAW_PATH "/etc/MIDImize/soundFonts/test/JR_analog.sf2"
 
 //struct init_settings
 //{

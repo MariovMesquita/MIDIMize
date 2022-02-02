@@ -96,12 +96,10 @@ void cSynth::setReverb()
 {
     if(this->reverb.active == 1)
     {
-        //this->reverb.active=1;
         fluid_synth_set_reverb_on(this->FsSynth, 1);
     }
     else
     {
-        //this->reverb.active=0;
         fluid_synth_set_reverb_on(this->FsSynth, 0);
     }
 
