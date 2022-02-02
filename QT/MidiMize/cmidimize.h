@@ -43,6 +43,9 @@ class CMidiMize
         ~CMidiMize()
         {
             delete instance;
+            system("rmmod pwr_led_rpi4");
+            system("rmmod osc1_led_rpi4");
+            system("rmmod osc2_led_rpi4");
         }
 
         CProtectedBuffer<ledCommand_t> led_cmds;

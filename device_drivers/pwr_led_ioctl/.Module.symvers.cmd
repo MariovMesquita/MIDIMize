@@ -1,0 +1,1 @@
+cmd_/home/mario/Documents/MidiMize/device_drivers/pwr_led_ioctl/Module.symvers := sed 's/ko$$/o/' /home/mario/Documents/MidiMize/device_drivers/pwr_led_ioctl/modules.order | scripts/mod/modpost -m -a   -o /home/mario/Documents/MidiMize/device_drivers/pwr_led_ioctl/Module.symvers -e -i Module.symvers   -T -

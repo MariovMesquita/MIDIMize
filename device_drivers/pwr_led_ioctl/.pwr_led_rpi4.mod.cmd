@@ -1,0 +1,1 @@
+cmd_/home/mario/Documents/MidiMize/device_drivers/pwr_led_ioctl/pwr_led_rpi4.mod := { echo  /home/mario/Documents/MidiMize/device_drivers/pwr_led_ioctl/pwr_led_rpi4.o;  echo; } > /home/mario/Documents/MidiMize/device_drivers/pwr_led_ioctl/pwr_led_rpi4.mod

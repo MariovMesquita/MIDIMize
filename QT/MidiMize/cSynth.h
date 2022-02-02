@@ -9,7 +9,7 @@ using namespace std;
 
 /* SYNTH INIT SETTINGS */
 #define FS_SAMPLE_RATE 44100.0
-#define FS_CPU_CORES 2
+#define FS_CPU_CORES 4
 #define FS_AUDIO_DRIVER "alsa"
 #define FS_MIDI_DRIVER "alsa_seq"
 
@@ -19,7 +19,7 @@ using namespace std;
 //#define SF_SAW_PATH "/etc/MIDImize/soundFonts/saw.sf2"
 
 #define SF_SINE_PATH "/etc/MIDImize/soundFonts/test/JR_Cosmic.SF2"
-#define SF_TRIANGLE_PATH "/etc/MIDImize/soundFonts/test/JR_ambiance1.sf2"
+#define SF_TRIANGLE_PATH "/etc/MIDImize/soundFonts/test/JR_ambiance1.SF2"
 #define SF_SAW_PATH "/etc/MIDImize/soundFonts/test/JR_analog.sf2"
 
 //struct init_settings
@@ -70,6 +70,7 @@ class cSynth
     private:
         fluid_audio_driver_t* FsAudioDriver;
         fluid_midi_driver_t* FsMidiDriver;
+        fluid_midi_router_t* FsMidiRouter;
         fluid_settings_t* FsSettings;
         fluid_synth_t* FsSynth;
         sound_font_t sFonts[3];
@@ -89,7 +90,6 @@ class cSynth
         void setGain(float gain);
         void setPitch();
         void init_synth();
-        void handle_midi_event();
 
 
 

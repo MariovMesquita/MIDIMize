@@ -28,6 +28,8 @@ void* tLed_job(void* opaque)
     //CProtectedBuffer<ledCommand_t>& commands = *((CProtectedBuffer<ledCommand_t> *)cmdBuffer);
 
     int osc1, osc2, pwr;
+    int32_t on=1;
+    int32_t off=0;
 
     system("insmod ./device_drivers/osc2_led_rpi4.ko");
     system("insmod ./device_drivers/osc1_led_rpi4.ko");
@@ -44,11 +46,11 @@ void* tLed_job(void* opaque)
         switch(cmd.led_cmd)
         {
             case OSC_1_ON:
-                ioctl(osc1, PWR, 1);
+                ioctl(osc1, PWR, (int32_t*) &on);
                 break;
 
             case OSC_1_OFF:
-                ioctl(osc1, PWR, 0);
+                ioctl(osc1, PWR, (int32_t*) &off);
                 break;
 
             case OSC_1_BLK:
@@ -56,11 +58,11 @@ void* tLed_job(void* opaque)
                 break;
 
             case OSC_2_ON:
-                ioctl(osc2, PWR, 1);
+                ioctl(osc2, PWR, (int32_t*) &on);
                 break;
 
             case OSC_2_OFF:
-                ioctl(osc2, PWR, 0);
+                ioctl(osc2, PWR, (int32_t*) &off);
                 break;
 
             case OSC_2_BLK:
@@ -68,11 +70,11 @@ void* tLed_job(void* opaque)
                 break;
 
             case PWR_ON:
-                system("echo 1 > /dev/pwr_led");
+                ioctl(pwr, PWR, (int32_t*) &on);
                 break;
 
             case PWR_OFF:
-                system("echo 0 > /dev/pwr_led");
+                ioctl(pwr, PWR, (int32_t*) &off);
                 break;
 
             default:

@@ -1,0 +1,1 @@
+cmd_/home/mario/Documents/MidiMize/device_drivers/pwr_led_ioctl/modules.order := {   echo /home/mario/Documents/MidiMize/device_drivers/pwr_led_ioctl/pwr_led_rpi4.ko; :; } | awk '!x[$$0]++' - > /home/mario/Documents/MidiMize/device_drivers/pwr_led_ioctl/modules.order

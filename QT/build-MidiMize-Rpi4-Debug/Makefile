@@ -224,7 +224,7 @@ DIST          = ../../../../buildroot/buildroot-2021.02.5/output/host/mkspecs/fe
 		../MidiMize/cprotectedbuffer.h \
 		../MidiMize/tled.h \
 		../MidiMize/ui_MidiMizeForm.h \
-		../MidiMize/ui_aboutForm.h ../MidiMize/MidiMizeForm.cpp \
+		ui_aboutForm.h ../MidiMize/MidiMizeForm.cpp \
 		../MidiMize/aboutForm.cpp \
 		../MidiMize/cSynth.cpp \
 		../MidiMize/cmidimize.cpp \
@@ -555,7 +555,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../MidiMize/resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../buildroot/buildroot-2021.02.5/output/host/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../MidiMize/MidiMizeForm.h ../MidiMize/aboutForm.h ../MidiMize/cSynth.h ../MidiMize/cmidimize.h ../MidiMize/cprotectedbuffer.h ../MidiMize/tled.h ../MidiMize/ui_MidiMizeForm.h ../MidiMize/ui_aboutForm.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../MidiMize/MidiMizeForm.h ../MidiMize/aboutForm.h ../MidiMize/cSynth.h ../MidiMize/cmidimize.h ../MidiMize/cprotectedbuffer.h ../MidiMize/tled.h ../MidiMize/ui_MidiMizeForm.h ui_aboutForm.h $(DISTDIR)/
 	$(COPY_FILE) --parents ../MidiMize/MidiMizeForm.cpp ../MidiMize/aboutForm.cpp ../MidiMize/cSynth.cpp ../MidiMize/cmidimize.cpp ../MidiMize/cprotectedbuffer.cpp ../MidiMize/main.cpp ../MidiMize/tled.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../UI/MidiMizeForm.ui \ ../UI/aboutForm.ui $(DISTDIR)/
 
@@ -754,7 +754,7 @@ moc_MidiMizeForm.cpp: ../MidiMize/MidiMizeForm.h \
 	/home/mario/buildroot/buildroot-2021.02.5/output/host/bin/moc $(DEFINES) --include /home/mario/Documents/MidiMize/QT/build-MidiMize-Rpi4-Debug/moc_predefs.h -I/home/mario/buildroot/buildroot-2021.02.5/output/host/mkspecs/devices/linux-rasp-pi3-vc4-g++ -I/home/mario/Documents/MidiMize/QT/MidiMize -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5 -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtGui -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore -I. -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/include/c++/9.4.0 -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/include/c++/9.4.0/arm-buildroot-linux-gnueabihf -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/include/c++/9.4.0/backward -I/home/mario/buildroot/buildroot-2021.02.5/output/host/lib/gcc/arm-buildroot-linux-gnueabihf/9.4.0/include -I/home/mario/buildroot/buildroot-2021.02.5/output/host/lib/gcc/arm-buildroot-linux-gnueabihf/9.4.0/include-fixed -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/include -I/home/mario/buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include ../MidiMize/MidiMizeForm.h -o moc_MidiMizeForm.cpp
 
 moc_aboutForm.cpp: ../MidiMize/aboutForm.h \
-		../MidiMize/ui_aboutForm.h \
+		ui_aboutForm.h \
 		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/QVariant \
 		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qvariant.h \
 		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qatomic.h \
@@ -884,7 +884,6 @@ compiler_uic_clean:
 ui_MidiMizeForm.h: ../UI/MidiMizeForm.ui \
 		../../../../buildroot/buildroot-2021.02.5/output/host/bin/uic
 	/home/mario/buildroot/buildroot-2021.02.5/output/host/bin/uic ../UI/MidiMizeForm.ui -o ui_MidiMizeForm.h
-
 
 ui_aboutForm.h: ../UI/aboutForm.ui \
 		../../../../buildroot/buildroot-2021.02.5/output/host/bin/uic
@@ -1043,13 +1042,13 @@ MidiMizeForm.o: ../MidiMize/MidiMizeForm.cpp ../MidiMize/MidiMizeForm.h \
 		../MidiMize/cprotectedbuffer.h \
 		../MidiMize/tled.h \
 		../MidiMize/aboutForm.h \
-		../MidiMize/ui_aboutForm.h \
+		ui_aboutForm.h \
 		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/QDialog \
 		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qdialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o MidiMizeForm.o ../MidiMize/MidiMizeForm.cpp
 
 aboutForm.o: ../MidiMize/aboutForm.cpp ../MidiMize/aboutForm.h \
-		../MidiMize/ui_aboutForm.h \
+		ui_aboutForm.h \
 		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/QVariant \
 		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qvariant.h \
 		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtCore/qatomic.h \
@@ -1325,7 +1324,7 @@ main.o: ../MidiMize/main.cpp ../../../../buildroot/buildroot-2021.02.5/output/ho
 		../MidiMize/cprotectedbuffer.h \
 		../MidiMize/tled.h \
 		../MidiMize/aboutForm.h \
-		../MidiMize/ui_aboutForm.h \
+		ui_aboutForm.h \
 		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/QDialog \
 		../../../../buildroot/buildroot-2021.02.5/output/host/arm-buildroot-linux-gnueabihf/sysroot/usr/include/qt5/QtWidgets/qdialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../MidiMize/main.cpp

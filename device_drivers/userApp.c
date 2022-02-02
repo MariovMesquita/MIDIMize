@@ -54,15 +54,15 @@ int main(int argc, char* argv[])
         printf("Pwr Led control \n-OFF- 0\n-ON 1\n");
         scanf("%d", &ctrl);
         printf("Sending power control to driver\n");
-        //ioctl(fd0, PWR, (int32_t*) &ctrl);
-        if(ctrl == 0)
-        {
-            system("echo 0 > /dev/pwr_led");
-        }
-        else
-        {
-            system("echo 1 > /dev/pwr_led");
-        }
+        ioctl(pwr, PWR, (int32_t*) &ctrl);
+        // if(ctrl == 0)
+        // {
+        //     system("echo 0 > /dev/pwr_led");
+        // }
+        // else
+        // {
+        //     system("echo 1 > /dev/pwr_led");
+        // }
         sleep(1);
 
         printf("osc 1 Led control \n-OFF- 0\n-ON 1\n");

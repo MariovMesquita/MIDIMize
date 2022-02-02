@@ -15,7 +15,7 @@ MidiMizeForm::~MidiMizeForm(){}
 void MidiMizeForm::on_gainDial_valueChanged(int value)
 {
     QtWrap.synth[0]->setGain(static_cast<float>((value)/10.0));
-    QtWrap.synth[1]->setGain(static_cast<float>((value)/10.0));
+    //QtWrap.synth[1]->setGain(static_cast<float>((value)/10.0));
 }
 
 void MidiMizeForm::on_osc1Pbutton_clicked(bool checked)
@@ -29,6 +29,8 @@ void MidiMizeForm::on_osc1Pbutton_clicked(bool checked)
             QtWrap.synth[0]->noteOn(1, 55, 50);
             QtWrap.synth[0]->current_note = 55;
             QtWrap.led_ctrl->pushBuffer(cmd);
+            //ledCommand_t cmd1={55, PWR_ON};
+            //QtWrap.led_ctrl->pushBuffer(cmd1);
         }
     }
     else
@@ -311,6 +313,14 @@ void MidiMizeForm::on_midiRbutton_clicked(bool checked)
     if(checked)
     {
         QtWrap.solo=(bool*)0;
+        if(QtWrap.synth[0]->synthOn)
+        {
+            QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+        }
+        if(QtWrap.synth[1]->synthOn)
+        {
+            QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+        }
     }
 }
 

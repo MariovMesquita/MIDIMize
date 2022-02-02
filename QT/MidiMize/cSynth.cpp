@@ -11,6 +11,12 @@ cSynth::cSynth()
     fluid_settings_setint(FsSettings, "synth.cpu-cores", FS_CPU_CORES);
     fluid_settings_setstr(FsSettings, "audio.driver", FS_AUDIO_DRIVER);
     fluid_settings_setstr(FsSettings, "midi.driver", FS_MIDI_DRIVER);
+    fluid_settings_setint(FsSettings, "midi.autoconnect", 1);
+    fluid_settings_setint(FsSettings, "audio.period-size", 128);
+    fluid_settings_setint(FsSettings, "audio.periods", 8);
+    fluid_settings_setint(FsSettings, "synth.verbose", 1);
+
+
 
     /* Create synth instance */
     this->FsSynth = new_fluid_synth(this->FsSettings);
@@ -32,8 +38,11 @@ cSynth::cSynth()
     /* Create Audio Driver */
     this->FsAudioDriver = new_fluid_audio_driver(this->FsSettings, this->FsSynth);
 
+    /* Create Midi router */
+    this->FsMidiRouter = new_fluid_midi_router(this->FsSettings, fluid_synth_handle_midi_event, this->FsSynth);
+
     /* Create Midi Driver */
-    this->FsMidiDriver = new_fluid_midi_driver(this->FsSettings, fluid_synth_handle_midi_event, NULL);
+    this->FsMidiDriver = new_fluid_midi_driver(this->FsSettings, fluid_midi_router_handle_midi_event, this->FsMidiRouter);
 
     /* Init Values */
     init_synth();
