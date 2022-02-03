@@ -1,7 +1,6 @@
 #include <QApplication>
 #include <QTime>
 #include "MidiMizeForm.h"
-#include "aboutForm.h"
 #include "cmidimize.h"
 
 void delay2()
@@ -34,7 +33,6 @@ int main(int argc, char** argv)
 
     //CMidiMize* MIDImize = CMidiMize::getInstance(QtWrap);
 
-    aboutForm about;
     MidiMizeForm gui;
     gui.show();
 

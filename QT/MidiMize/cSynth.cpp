@@ -11,10 +11,10 @@ cSynth::cSynth()
     fluid_settings_setint(FsSettings, "synth.cpu-cores", FS_CPU_CORES);
     fluid_settings_setstr(FsSettings, "audio.driver", FS_AUDIO_DRIVER);
     fluid_settings_setstr(FsSettings, "midi.driver", FS_MIDI_DRIVER);
-    fluid_settings_setint(FsSettings, "midi.autoconnect", 1);
-    fluid_settings_setint(FsSettings, "audio.period-size", 128);
-    fluid_settings_setint(FsSettings, "audio.periods", 8);
+    fluid_settings_setint(FsSettings, "audio.period-size", FS_BUFFER_SIZE);
+    fluid_settings_setint(FsSettings, "audio.periods", FS_N_BUFFERS);
     fluid_settings_setint(FsSettings, "synth.verbose", 1);
+    fluid_settings_setint(FsSettings, "midi.autoconnect", 0);
 
 
 
@@ -38,22 +38,50 @@ cSynth::cSynth()
     /* Create Audio Driver */
     this->FsAudioDriver = new_fluid_audio_driver(this->FsSettings, this->FsSynth);
 
-    /* Create Midi router */
-    this->FsMidiRouter = new_fluid_midi_router(this->FsSettings, fluid_synth_handle_midi_event, this->FsSynth);
-
-    /* Create Midi Driver */
-    this->FsMidiDriver = new_fluid_midi_driver(this->FsSettings, fluid_midi_router_handle_midi_event, this->FsMidiRouter);
+//    /* Create Midi Driver */
+//    this->FsMidiDriver = new_fluid_midi_driver(this->FsSettings, fluid_midi_router_handle_midi_event, this->FsMidiRouter);
 
     /* Init Values */
-    init_synth();
+    init_values();
 
 }
 
-void cSynth::init_synth()
+//void cSynth::init_synth()
+//{
+//    this->FsSynth = new_fluid_synth(this->FsSettings);
+
+//    /* Create Audio Driver */
+//    this->FsAudioDriver = new_fluid_audio_driver(this->FsSettings, this->FsSynth);
+//}
+
+//void cSynth::delete_synth()
+//{
+//    delete_fluid_audio_driver(this->FsAudioDriver);
+//    delete_fluid_midi_router(this->FsMidiRouter);
+//    delete_fluid_midi_driver(this->FsMidiDriver);
+//    delete_fluid_synth(this->FsSynth);
+//}
+
+void cSynth::init_midi()
+{
+    /* Create Midi router */
+    this->FsMidiRouter = new_fluid_midi_router(this->FsSettings, fluid_synth_handle_midi_event, this->FsSynth);
+
+    this->FsMidiDriver = new_fluid_midi_driver(this->FsSettings, fluid_midi_router_handle_midi_event, this->FsMidiRouter);
+}
+
+void cSynth::stop_midi()
+{
+    delete_fluid_midi_driver(this->FsMidiDriver);
+    delete_fluid_midi_router(this->FsMidiRouter);
+
+}
+
+void cSynth::init_values()
 {
     this->synthOn = 0;
     this->pitchBend = 0;
-    this->gain = 0;
+    this->gain = 0; // meter aqui o ganho normalizado
     this->oscillator = SINE;
 
     this->chorus.active = 0;

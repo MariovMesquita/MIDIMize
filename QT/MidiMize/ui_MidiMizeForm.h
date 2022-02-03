@@ -578,7 +578,7 @@ public:
         gainDial = new QDial(gainWidget);
         gainDial->setObjectName(QString::fromUtf8("gainDial"));
         gainDial->setGeometry(QRect(15, 40, 150, 131));
-        gainDial->setMaximum(100);
+        gainDial->setMaximum(30);
         gainDial->setSingleStep(1);
         gainDial->setValue(0);
         gainDial->setTracking(true);

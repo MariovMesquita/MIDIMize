@@ -24,7 +24,7 @@ private slots:
     void on_osc2SineRbutton_toggled(bool checked);
     void on_osc2TriRbutton_toggled(bool checked);
     void on_osc2SawRbutton_toggled(bool checked);
-    void on_osc2Pbutton_toggled(bool checked);
+    void on_osc2Pbutton_clicked(bool checked);
     void on_osc1ReverbEnable_toggled(bool checked);
     void on_osc2ReverbEnable_toggled(bool checked);
     void on_osc1ChorusEnable_toggled(bool checked);

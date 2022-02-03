@@ -44,7 +44,7 @@ QT_MOC_LITERAL(8, 129, 25), // "on_osc1SawRbutton_toggled"
 QT_MOC_LITERAL(9, 155, 26), // "on_osc2SineRbutton_toggled"
 QT_MOC_LITERAL(10, 182, 25), // "on_osc2TriRbutton_toggled"
 QT_MOC_LITERAL(11, 208, 25), // "on_osc2SawRbutton_toggled"
-QT_MOC_LITERAL(12, 234, 22), // "on_osc2Pbutton_toggled"
+QT_MOC_LITERAL(12, 234, 22), // "on_osc2Pbutton_clicked"
 QT_MOC_LITERAL(13, 257, 27), // "on_osc1ReverbEnable_toggled"
 QT_MOC_LITERAL(14, 285, 27), // "on_osc2ReverbEnable_toggled"
 QT_MOC_LITERAL(15, 313, 27), // "on_osc1ChorusEnable_toggled"
@@ -78,7 +78,7 @@ QT_MOC_LITERAL(35, 909, 22) // "on_soloRbutton_clicked"
     "on_osc2SineRbutton_toggled\0"
     "on_osc2TriRbutton_toggled\0"
     "on_osc2SawRbutton_toggled\0"
-    "on_osc2Pbutton_toggled\0"
+    "on_osc2Pbutton_clicked\0"
     "on_osc1ReverbEnable_toggled\0"
     "on_osc2ReverbEnable_toggled\0"
     "on_osc1ChorusEnable_toggled\0"
@@ -202,7 +202,7 @@ void MidiMizeForm::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         case 5: _t->on_osc2SineRbutton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 6: _t->on_osc2TriRbutton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 7: _t->on_osc2SawRbutton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 8: _t->on_osc2Pbutton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 8: _t->on_osc2Pbutton_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 9: _t->on_osc1ReverbEnable_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 10: _t->on_osc2ReverbEnable_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 11: _t->on_osc1ChorusEnable_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;

@@ -10,6 +10,8 @@ using namespace std;
 /* SYNTH INIT SETTINGS */
 #define FS_SAMPLE_RATE 44100.0
 #define FS_CPU_CORES 4
+#define FS_BUFFER_SIZE 128
+#define FS_N_BUFFERS 8
 #define FS_AUDIO_DRIVER "alsa"
 #define FS_MIDI_DRIVER "alsa_seq"
 
@@ -22,14 +24,6 @@ using namespace std;
 #define SF_TRIANGLE_PATH "/etc/MIDImize/soundFonts/test/JR_ambiance1.SF2"
 #define SF_SAW_PATH "/etc/MIDImize/soundFonts/test/JR_analog.sf2"
 
-//struct init_settings
-//{
-//    float fs_sampleRate = 44100.0;
-//    float fs_cpuCores = 2;
-//    string fs_audioDriver = "alsa";
-//    string fs_midiDriver = "alsa_seq";
-//    string fs_soundFonts[3] = {"/etc/MIDImize/soundFonts/sine.sf2" , "/etc/MIDImize/soundFonts/saw.sf2" , "/etc/MIDImize/soundFonts/triangle.sf2"};
-//};
 
 enum oscillator_t
 {
@@ -76,7 +70,7 @@ class cSynth
         sound_font_t sFonts[3];
 
         float gain;
-
+        bool midi_on;
 
     public:
         cSynth();
@@ -89,9 +83,11 @@ class cSynth
         void setOscillator();
         void setGain(float gain);
         void setPitch();
+        void init_values();
+        void delete_synth();
         void init_synth();
-
-
+        void init_midi();
+        void stop_midi();
 
         //int synthID;
         chorus_settings_t chorus;

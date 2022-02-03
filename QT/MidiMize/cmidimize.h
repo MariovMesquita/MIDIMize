@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #define N_SYNTHS 2
 
@@ -16,7 +17,7 @@ struct QtWrapper
 {
     CProtectedBuffer<ledCommand_t>* led_ctrl;
     cSynth* synth[2];
-    bool* solo;
+    bool solo;
 };
 
 class CMidiMize
