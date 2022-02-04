@@ -12,6 +12,16 @@ class MidiMizeForm : public QMainWindow, private Ui::MidiMizeForm
 public:
     explicit MidiMizeForm(QWidget *parent = nullptr);
     QtWrapper QtWrap;
+    void init_osc1Led_midi();
+    void init_osc2Led_midi();
+
+    fluid_midi_router_t* osc1LedRouter;
+    fluid_midi_driver_t* osc1LedDriver;
+    fluid_midi_router_t* osc2LedRouter;
+    fluid_midi_driver_t* osc2LedDriver;
+    fluid_settings_t* osc2LedSettings;
+    fluid_settings_t* osc1LedSettings;
+
     ~MidiMizeForm();
 
 private slots:

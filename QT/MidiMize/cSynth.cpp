@@ -4,7 +4,7 @@
 using namespace std;
 
 cSynth::cSynth()
-{
+{    
     /* Create settings object and pass init values */
     this->FsSettings = new_fluid_settings();
     fluid_settings_setnum(FsSettings, "synth.sample-rate", FS_SAMPLE_RATE);
@@ -15,8 +15,6 @@ cSynth::cSynth()
     fluid_settings_setint(FsSettings, "audio.periods", FS_N_BUFFERS);
     fluid_settings_setint(FsSettings, "synth.verbose", 1);
     fluid_settings_setint(FsSettings, "midi.autoconnect", 0);
-
-
 
     /* Create synth instance */
     this->FsSynth = new_fluid_synth(this->FsSettings);
@@ -56,7 +54,6 @@ void cSynth::stop_midi()
 {
     delete_fluid_midi_driver(this->FsMidiDriver);
     delete_fluid_midi_router(this->FsMidiRouter);
-
 }
 
 void cSynth::init_values()

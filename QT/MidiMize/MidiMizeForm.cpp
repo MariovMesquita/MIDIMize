@@ -26,6 +26,94 @@ void MidiMizeForm::on_gainDial_valueChanged(int value)
 
 }
 
+/*  MIDI LED HANDLERS */
+
+int handle_midi_event_osc1(void* data, fluid_midi_event_t *event)
+{
+    QtWrapper *led = (QtWrapper*)data;
+    int key = fluid_midi_event_get_key(event);
+    int type = fluid_midi_event_get_type(event);
+    char typec[24];
+    ledCommand_t cmd, cmd_osc, cmd_pwr;
+    sprintf(typec, "%d\n", type);
+    if(type==144)
+    {
+        cmd = {key, OSC_1_BLK};
+        led->led_ctrl->pushBuffer(cmd);
+    }
+    else if(type==128)
+    {
+        cmd_osc = {key, OSC_1_OFF};
+        cmd_pwr = {key, PWR_ON};
+        led->led_ctrl->pushBuffer(cmd_osc);
+        led->led_ctrl->pushBuffer(cmd_pwr);
+    }
+    else if(type==208)
+    {
+        cmd = {key, PWR_BLK};
+        led->led_ctrl->pushBuffer(cmd);
+    }
+
+    fluid_log(FLUID_INFO, typec);
+
+    return FLUID_OK;
+}
+
+int handle_midi_event_osc2(void* data, fluid_midi_event_t *event)
+{
+    QtWrapper *led = (QtWrapper*)data;
+    int key = fluid_midi_event_get_key(event);
+    int type = fluid_midi_event_get_type(event);
+    char typec[24];
+    ledCommand_t cmd, cmd_osc, cmd_pwr;
+    sprintf(typec, "%d\n", type);
+    if(type==144)
+    {
+        cmd = {key, OSC_2_BLK};
+        led->led_ctrl->pushBuffer(cmd);
+    }
+    else if(type==128)
+    {
+        cmd_osc = {key, OSC_2_OFF};
+        cmd_pwr = {key, PWR_ON};
+        led->led_ctrl->pushBuffer(cmd_osc);
+        led->led_ctrl->pushBuffer(cmd_pwr);
+    }
+    else if(type==208)
+    {
+        cmd = {key, PWR_BLK};
+        led->led_ctrl->pushBuffer(cmd);
+    }
+
+    fluid_log(FLUID_INFO, typec);
+
+    return FLUID_OK;
+}
+
+void MidiMizeForm::init_osc1Led_midi()
+{
+    this->osc1LedSettings = new_fluid_settings();
+    fluid_settings_setint(this->osc1LedSettings, "midi.autoconnect", 0);
+    fluid_settings_setstr(this->osc1LedSettings, "midi.driver", FS_MIDI_DRIVER);
+
+    this->osc1LedRouter = new_fluid_midi_router(this->osc1LedSettings, handle_midi_event_osc1, &QtWrap);
+    this->osc1LedDriver = new_fluid_midi_driver(this->osc1LedSettings, fluid_midi_router_handle_midi_event, this->osc1LedRouter);
+
+}
+
+void MidiMizeForm::init_osc2Led_midi()
+{
+    this->osc2LedSettings = new_fluid_settings();
+    fluid_settings_setint(this->osc2LedSettings, "midi.autoconnect", 0);
+    fluid_settings_setstr(this->osc2LedSettings, "midi.driver", FS_MIDI_DRIVER);
+
+    this->osc2LedRouter = new_fluid_midi_router(this->osc2LedSettings, handle_midi_event_osc2, &QtWrap);
+    this->osc2LedDriver = new_fluid_midi_driver(this->osc2LedSettings, fluid_midi_router_handle_midi_event, this->osc2LedRouter);
+}
+
+/* END OF MIDI LED HANDLERS */
+
+
 void MidiMizeForm::on_osc1Pbutton_clicked(bool checked)
 {
     if(checked)
@@ -44,6 +132,7 @@ void MidiMizeForm::on_osc1Pbutton_clicked(bool checked)
         else if(QtWrap.solo==0) // MIDI mode
         {
             system("aconnect 24 128");
+            system("aconnect 24 130");
             QtWrap.synth[0]->setOscillator();
         }
     }
@@ -61,6 +150,7 @@ void MidiMizeForm::on_osc1Pbutton_clicked(bool checked)
         else if(QtWrap.solo==0) // MIDI mode
         {
             system("aconnect -d 24 128");
+            system("aconnect -d 24 130");
         }
     }
 }
@@ -140,6 +230,7 @@ void MidiMizeForm::on_osc2Pbutton_clicked(bool checked)
         else if(QtWrap.solo==0) // MIDI mode
         {
             system("aconnect 24 129");
+            system("aconnect 24 131");
             QtWrap.synth[1]->setOscillator();
         }
 
@@ -156,7 +247,7 @@ void MidiMizeForm::on_osc2Pbutton_clicked(bool checked)
 
         else if(QtWrap.solo==0) // MIDI mode
         {
-            system("aconnect -d 24 129");
+            system("aconnect -d 24 131");
         }
     }
 }
@@ -380,52 +471,17 @@ void MidiMizeForm::on_aboutButton_clicked()
     //about.exec();
 }
 
-int handle_midi_event_led(void* data, fluid_midi_event_t *event)
-{
-    QtWrapper *led = (QtWrapper*)data;
-    int key = fluid_midi_event_get_key(event);
-    int type = fluid_midi_event_get_type(event);
-    char typec[24];
-    ledCommand_t cmd, cmd_osc, cmd_pwr;
-    sprintf(typec, "%d\n", type);
-    if(type==144)
-    {
-        cmd = {key, OSC_2_BLK};
-        led->led_ctrl->pushBuffer(cmd);
-    }
-    else if(type==128)
-    {
-        cmd_osc = {key, OSC_2_OFF};
-        cmd_pwr = {key, PWR_ON};
-        led->led_ctrl->pushBuffer(cmd_osc);
-        led->led_ctrl->pushBuffer(cmd_pwr);
-    }
-    else if(type==208)
-    {
-        cmd = {key, PWR_BLK};
-        led->led_ctrl->pushBuffer(cmd);
-    }
-
-    fluid_log(FLUID_INFO, typec);
-
-    return FLUID_OK;
-}
-
 void MidiMizeForm::on_midiRbutton_clicked(bool checked)
 {
     if(checked)
     {
         QtWrap.solo=0;
+
         QtWrap.synth[0]->init_midi();
-
-        fluid_settings_t* ledSettings = new_fluid_settings();
-        fluid_settings_setint(ledSettings, "midi.autoconnect", 1);
-        fluid_settings_setstr(ledSettings, "midi.driver", FS_MIDI_DRIVER);
-
         QtWrap.synth[1]->init_midi();
 
-        fluid_midi_router_t* ledRouter = new_fluid_midi_router(ledSettings, handle_midi_event_led, &QtWrap);
-        fluid_midi_driver_t* leddriver = new_fluid_midi_driver(ledSettings, fluid_midi_router_handle_midi_event, ledRouter);
+        init_osc1Led_midi();
+        init_osc2Led_midi();
 
         if(QtWrap.synth[0]->synthOn)
         {
@@ -452,6 +508,12 @@ void MidiMizeForm::on_soloRbutton_clicked(bool checked)
         {
             QtWrap.synth[0]->stop_midi();
             QtWrap.synth[1]->stop_midi();
+            delete_fluid_midi_driver(this->osc1LedDriver);
+            delete_fluid_midi_router(this->osc1LedRouter);
+            delete_fluid_midi_driver(this->osc2LedDriver);
+            delete_fluid_midi_router(this->osc2LedRouter);
+            delete_fluid_settings(this->osc1LedSettings);
+            delete_fluid_settings(this->osc2LedSettings);
         }
 
         QtWrap.solo=1;

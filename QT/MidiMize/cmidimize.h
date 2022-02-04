@@ -20,6 +20,11 @@ struct QtWrapper
     bool solo;
 };
 
+struct SynthWrapper
+{
+    CProtectedBuffer<ledCommand_t>* led_ctrl;
+};
+
 class CMidiMize
 {
     private:
