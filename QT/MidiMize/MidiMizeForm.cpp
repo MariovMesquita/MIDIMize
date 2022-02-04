@@ -44,6 +44,7 @@ void MidiMizeForm::on_osc1Pbutton_clicked(bool checked)
         else if(QtWrap.solo==0) // MIDI mode
         {
             system("aconnect 24 128");
+            QtWrap.synth[0]->setOscillator();
         }
     }
 
@@ -139,6 +140,7 @@ void MidiMizeForm::on_osc2Pbutton_clicked(bool checked)
         else if(QtWrap.solo==0) // MIDI mode
         {
             system("aconnect 24 129");
+            QtWrap.synth[1]->setOscillator();
         }
 
     }
@@ -378,13 +380,30 @@ void MidiMizeForm::on_aboutButton_clicked()
     //about.exec();
 }
 
+int handle_midi_event_led(void* data, fluid_midi_event_t *event)
+{
+    QtWrapper led = (QtWrapper&)data;
+    int key = fluid_midi_event_get_key(event);
+    ledCommand_t cmd={key, OSC_2_BLK};
+    led.led_ctrl->pushBuffer(cmd);
+
+    return FLUID_OK;
+}
+
 void MidiMizeForm::on_midiRbutton_clicked(bool checked)
 {
     if(checked)
     {
         QtWrap.solo=0;
         QtWrap.synth[0]->init_midi();
+
+        fluid_settings_t* ledSettings = new_fluid_settings();
+        fluid_settings_setstr(ledSettings, "midi.driver", FS_MIDI_DRIVER);
+
         QtWrap.synth[1]->init_midi();
+
+        fluid_midi_router_t* ledRouter = new_fluid_midi_router(ledSettings, handle_midi_event_led, &QtWrap.synth[0]);
+        //fluid_midi_driver_t* leddriver = new_fluid_midi_driver(ledSettings, fluid_midi_router_handle_midi_event, ledRouter);
 
         if(QtWrap.synth[0]->synthOn)
         {

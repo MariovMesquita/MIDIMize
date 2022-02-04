@@ -38,35 +38,17 @@ cSynth::cSynth()
     /* Create Audio Driver */
     this->FsAudioDriver = new_fluid_audio_driver(this->FsSettings, this->FsSynth);
 
-//    /* Create Midi Driver */
-//    this->FsMidiDriver = new_fluid_midi_driver(this->FsSettings, fluid_midi_router_handle_midi_event, this->FsMidiRouter);
-
     /* Init Values */
     init_values();
 
 }
 
-//void cSynth::init_synth()
-//{
-//    this->FsSynth = new_fluid_synth(this->FsSettings);
-
-//    /* Create Audio Driver */
-//    this->FsAudioDriver = new_fluid_audio_driver(this->FsSettings, this->FsSynth);
-//}
-
-//void cSynth::delete_synth()
-//{
-//    delete_fluid_audio_driver(this->FsAudioDriver);
-//    delete_fluid_midi_router(this->FsMidiRouter);
-//    delete_fluid_midi_driver(this->FsMidiDriver);
-//    delete_fluid_synth(this->FsSynth);
-//}
-
 void cSynth::init_midi()
 {
-    /* Create Midi router */
+    /* Create MIDI router */
     this->FsMidiRouter = new_fluid_midi_router(this->FsSettings, fluid_synth_handle_midi_event, this->FsSynth);
 
+    /* Create MIDI driver */
     this->FsMidiDriver = new_fluid_midi_driver(this->FsSettings, fluid_midi_router_handle_midi_event, this->FsMidiRouter);
 }
 

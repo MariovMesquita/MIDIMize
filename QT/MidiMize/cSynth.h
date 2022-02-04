@@ -65,6 +65,7 @@ class cSynth
         fluid_audio_driver_t* FsAudioDriver;
         fluid_midi_driver_t* FsMidiDriver;
         fluid_midi_router_t* FsMidiRouter;
+        //fluid_midi_router_t* LedMidiRouter;
         fluid_settings_t* FsSettings;
         fluid_synth_t* FsSynth;
         sound_font_t sFonts[3];

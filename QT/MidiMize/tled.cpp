@@ -31,9 +31,9 @@ void* tLed_job(void* opaque)
     int32_t on=1;
     int32_t off=0;
 
-    system("insmod ./device_drivers/osc2_led_rpi4.ko");
-    system("insmod ./device_drivers/osc1_led_rpi4.ko");
-    system("insmod ./device_drivers/pwr_led_rpi4.ko");
+    system("insmod etc/MIDImize/device_drivers/osc2_led_rpi4.ko");
+    system("insmod etc/MIDImize/device_drivers/osc1_led_rpi4.ko");
+    system("insmod etc/MIDImize/device_drivers/pwr_led_rpi4.ko");
 
     osc1 = open("/dev/osc1_led", O_WRONLY);
     osc2 = open("/dev/osc2_led", O_WRONLY);
