@@ -382,10 +382,31 @@ void MidiMizeForm::on_aboutButton_clicked()
 
 int handle_midi_event_led(void* data, fluid_midi_event_t *event)
 {
-    QtWrapper led = (QtWrapper&)data;
+    QtWrapper *led = (QtWrapper*)data;
     int key = fluid_midi_event_get_key(event);
-    ledCommand_t cmd={key, OSC_2_BLK};
-    led.led_ctrl->pushBuffer(cmd);
+    int type = fluid_midi_event_get_type(event);
+    char typec[24];
+    ledCommand_t cmd, cmd_osc, cmd_pwr;
+    sprintf(typec, "%d\n", type);
+    if(type==144)
+    {
+        cmd = {key, OSC_2_BLK};
+        led->led_ctrl->pushBuffer(cmd);
+    }
+    else if(type==128)
+    {
+        cmd_osc = {key, OSC_2_OFF};
+        cmd_pwr = {key, PWR_ON};
+        led->led_ctrl->pushBuffer(cmd_osc);
+        led->led_ctrl->pushBuffer(cmd_pwr);
+    }
+    else if(type==208)
+    {
+        cmd = {key, PWR_BLK};
+        led->led_ctrl->pushBuffer(cmd);
+    }
+
+    fluid_log(FLUID_INFO, typec);
 
     return FLUID_OK;
 }
@@ -398,12 +419,13 @@ void MidiMizeForm::on_midiRbutton_clicked(bool checked)
         QtWrap.synth[0]->init_midi();
 
         fluid_settings_t* ledSettings = new_fluid_settings();
+        fluid_settings_setint(ledSettings, "midi.autoconnect", 1);
         fluid_settings_setstr(ledSettings, "midi.driver", FS_MIDI_DRIVER);
 
         QtWrap.synth[1]->init_midi();
 
-        fluid_midi_router_t* ledRouter = new_fluid_midi_router(ledSettings, handle_midi_event_led, &QtWrap.synth[0]);
-        //fluid_midi_driver_t* leddriver = new_fluid_midi_driver(ledSettings, fluid_midi_router_handle_midi_event, ledRouter);
+        fluid_midi_router_t* ledRouter = new_fluid_midi_router(ledSettings, handle_midi_event_led, &QtWrap);
+        fluid_midi_driver_t* leddriver = new_fluid_midi_driver(ledSettings, fluid_midi_router_handle_midi_event, ledRouter);
 
         if(QtWrap.synth[0]->synthOn)
         {

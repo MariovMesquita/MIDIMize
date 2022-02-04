@@ -26,7 +26,6 @@ class CMidiMize
         static CMidiMize* instance;
         cSynth synths [N_SYNTHS];
         TLed led_thread;
-        bool soloMode;
 
 
         CMidiMize(QtWrapper &QtWrap);

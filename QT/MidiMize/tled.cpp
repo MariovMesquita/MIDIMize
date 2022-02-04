@@ -31,9 +31,9 @@ void* tLed_job(void* opaque)
     int32_t on=1;
     int32_t off=0;
 
-    system("insmod etc/MIDImize/device_drivers/osc2_led_rpi4.ko");
-    system("insmod etc/MIDImize/device_drivers/osc1_led_rpi4.ko");
-    system("insmod etc/MIDImize/device_drivers/pwr_led_rpi4.ko");
+    system("insmod /etc/MIDImize/device_drivers/osc2_led_rpi4.ko");
+    system("insmod /etc/MIDImize/device_drivers/osc1_led_rpi4.ko");
+    system("insmod /etc/MIDImize/device_drivers/pwr_led_rpi4.ko");
 
     osc1 = open("/dev/osc1_led", O_WRONLY);
     osc2 = open("/dev/osc2_led", O_WRONLY);
@@ -75,6 +75,10 @@ void* tLed_job(void* opaque)
 
             case PWR_OFF:
                 ioctl(pwr, PWR, (int32_t*) &off);
+                break;
+
+            case PWR_BLK:
+                ioctl(pwr, BLK, (int32_t*) &cmd.note);
                 break;
 
             default:
