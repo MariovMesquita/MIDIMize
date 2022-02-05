@@ -294,11 +294,12 @@ public:
         osc1ChorusLvl = new QDial(osc1ChorusWidget);
         osc1ChorusLvl->setObjectName(QString::fromUtf8("osc1ChorusLvl"));
         osc1ChorusLvl->setGeometry(QRect(209, 10, 82, 75));
-        osc1ChorusLvl->setMaximum(100);
+        osc1ChorusLvl->setMaximum(80);
         osc1ChorusLvl->setNotchesVisible(true);
         osc1ChorusNr = new QDial(osc1ChorusWidget);
         osc1ChorusNr->setObjectName(QString::fromUtf8("osc1ChorusNr"));
         osc1ChorusNr->setGeometry(QRect(120, 114, 81, 75));
+        osc1ChorusNr->setMaximum(2);
         osc1ChorusNr->setNotchesVisible(true);
         osc2ReverbWidget = new QWidget(centralwidget);
         osc2ReverbWidget->setObjectName(QString::fromUtf8("osc2ReverbWidget"));
@@ -340,7 +341,7 @@ public:
         osc2ReverbLvl = new QDial(osc2ReverbWidget);
         osc2ReverbLvl->setObjectName(QString::fromUtf8("osc2ReverbLvl"));
         osc2ReverbLvl->setGeometry(QRect(120, 10, 81, 75));
-        osc2ReverbLvl->setMaximum(10);
+        osc2ReverbLvl->setMaximum(5);
         osc2ReverbLvl->setNotchesVisible(true);
         osc2ReverbDamp = new QDial(osc2ReverbWidget);
         osc2ReverbDamp->setObjectName(QString::fromUtf8("osc2ReverbDamp"));
@@ -399,12 +400,13 @@ public:
         osc2ChorusLvl = new QDial(osc2ChorusWidget);
         osc2ChorusLvl->setObjectName(QString::fromUtf8("osc2ChorusLvl"));
         osc2ChorusLvl->setGeometry(QRect(209, 10, 82, 75));
-        osc2ChorusLvl->setMaximum(100);
+        osc2ChorusLvl->setMaximum(80);
         osc2ChorusLvl->setInvertedAppearance(false);
         osc2ChorusLvl->setNotchesVisible(true);
         osc2ChorusNr = new QDial(osc2ChorusWidget);
         osc2ChorusNr->setObjectName(QString::fromUtf8("osc2ChorusNr"));
         osc2ChorusNr->setGeometry(QRect(120, 114, 81, 75));
+        osc2ChorusNr->setMaximum(2);
         osc2ChorusNr->setNotchesVisible(true);
         noteTouchWidget = new QWidget(centralwidget);
         noteTouchWidget->setObjectName(QString::fromUtf8("noteTouchWidget"));
@@ -453,7 +455,7 @@ public:
         osc1ReverbLvl = new QDial(osc1ReverbWidget);
         osc1ReverbLvl->setObjectName(QString::fromUtf8("osc1ReverbLvl"));
         osc1ReverbLvl->setGeometry(QRect(120, 10, 81, 75));
-        osc1ReverbLvl->setMaximum(10);
+        osc1ReverbLvl->setMaximum(5);
         osc1ReverbLvl->setWrapping(false);
         osc1ReverbLvl->setNotchesVisible(true);
         osc1ReverbDamp = new QDial(osc1ReverbWidget);
@@ -487,15 +489,15 @@ public:
         osc2Label->setAlignment(Qt::AlignCenter);
         osc2Wave = new QWidget(osc2Widget);
         osc2Wave->setObjectName(QString::fromUtf8("osc2Wave"));
-        osc2Wave->setGeometry(QRect(30, 80, 71, 141));
+        osc2Wave->setGeometry(QRect(30, 80, 91, 141));
         verticalLayout_2 = new QVBoxLayout(osc2Wave);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         osc2SineRbutton = new QRadioButton(osc2Wave);
         osc2SineRbutton->setObjectName(QString::fromUtf8("osc2SineRbutton"));
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/new/waveIcons/sine.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/new/waveIcons/cosmic.png"), QSize(), QIcon::Normal, QIcon::Off);
         osc2SineRbutton->setIcon(icon);
-        osc2SineRbutton->setIconSize(QSize(30, 30));
+        osc2SineRbutton->setIconSize(QSize(35, 35));
         osc2SineRbutton->setChecked(true);
 
         verticalLayout_2->addWidget(osc2SineRbutton);
@@ -503,18 +505,18 @@ public:
         osc2TriRbutton = new QRadioButton(osc2Wave);
         osc2TriRbutton->setObjectName(QString::fromUtf8("osc2TriRbutton"));
         QIcon icon1;
-        icon1.addFile(QString::fromUtf8(":/new/waveIcons/triangle.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon1.addFile(QString::fromUtf8(":/new/waveIcons/ambiance.png"), QSize(), QIcon::Normal, QIcon::Off);
         osc2TriRbutton->setIcon(icon1);
-        osc2TriRbutton->setIconSize(QSize(30, 30));
+        osc2TriRbutton->setIconSize(QSize(35, 35));
 
         verticalLayout_2->addWidget(osc2TriRbutton);
 
         osc2SawRbutton = new QRadioButton(osc2Wave);
         osc2SawRbutton->setObjectName(QString::fromUtf8("osc2SawRbutton"));
         QIcon icon2;
-        icon2.addFile(QString::fromUtf8(":/new/waveIcons/1722168.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon2.addFile(QString::fromUtf8(":/new/waveIcons/saw2.png"), QSize(), QIcon::Normal, QIcon::Off);
         osc2SawRbutton->setIcon(icon2);
-        osc2SawRbutton->setIconSize(QSize(30, 30));
+        osc2SawRbutton->setIconSize(QSize(35, 35));
 
         verticalLayout_2->addWidget(osc2SawRbutton);
 
@@ -530,13 +532,13 @@ public:
         osc1Widget->setGeometry(QRect(179, 0, 131, 221));
         osc1Wave = new QWidget(osc1Widget);
         osc1Wave->setObjectName(QString::fromUtf8("osc1Wave"));
-        osc1Wave->setGeometry(QRect(30, 80, 71, 141));
+        osc1Wave->setGeometry(QRect(30, 80, 81, 141));
         verticalLayout = new QVBoxLayout(osc1Wave);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         osc1SineRbutton = new QRadioButton(osc1Wave);
         osc1SineRbutton->setObjectName(QString::fromUtf8("osc1SineRbutton"));
         osc1SineRbutton->setIcon(icon);
-        osc1SineRbutton->setIconSize(QSize(30, 30));
+        osc1SineRbutton->setIconSize(QSize(35, 35));
         osc1SineRbutton->setChecked(true);
 
         verticalLayout->addWidget(osc1SineRbutton);
@@ -544,14 +546,14 @@ public:
         osc1TriRbutton = new QRadioButton(osc1Wave);
         osc1TriRbutton->setObjectName(QString::fromUtf8("osc1TriRbutton"));
         osc1TriRbutton->setIcon(icon1);
-        osc1TriRbutton->setIconSize(QSize(30, 30));
+        osc1TriRbutton->setIconSize(QSize(35, 35));
 
         verticalLayout->addWidget(osc1TriRbutton);
 
         osc1SawRbutton = new QRadioButton(osc1Wave);
         osc1SawRbutton->setObjectName(QString::fromUtf8("osc1SawRbutton"));
         osc1SawRbutton->setIcon(icon2);
-        osc1SawRbutton->setIconSize(QSize(30, 30));
+        osc1SawRbutton->setIconSize(QSize(35, 35));
 
         verticalLayout->addWidget(osc1SawRbutton);
 
@@ -572,13 +574,13 @@ public:
         gainWidget->setGeometry(QRect(0, 220, 181, 221));
         gainLabel = new QLabel(gainWidget);
         gainLabel->setObjectName(QString::fromUtf8("gainLabel"));
-        gainLabel->setGeometry(QRect(60, 0, 61, 41));
+        gainLabel->setGeometry(QRect(40, 0, 101, 41));
         gainLabel->setFont(font2);
         gainLabel->setAlignment(Qt::AlignCenter);
         gainDial = new QDial(gainWidget);
         gainDial->setObjectName(QString::fromUtf8("gainDial"));
         gainDial->setGeometry(QRect(15, 40, 150, 131));
-        gainDial->setMaximum(30);
+        gainDial->setMaximum(100);
         gainDial->setSingleStep(1);
         gainDial->setValue(0);
         gainDial->setTracking(true);
@@ -697,7 +699,7 @@ public:
         osc1SawRbutton->setText(QString());
         osc1Pbutton->setText(QString());
         osc1Label->setText(QCoreApplication::translate("MidiMizeForm", "OSC1", nullptr));
-        gainLabel->setText(QCoreApplication::translate("MidiMizeForm", "GAIN", nullptr));
+        gainLabel->setText(QCoreApplication::translate("MidiMizeForm", "VOLUME", nullptr));
         soloRbutton->setText(QCoreApplication::translate("MidiMizeForm", "SOLO", nullptr));
         midiRbutton->setText(QCoreApplication::translate("MidiMizeForm", "MIDI", nullptr));
         aboutButton->setText(QCoreApplication::translate("MidiMizeForm", "ABOUT", nullptr));

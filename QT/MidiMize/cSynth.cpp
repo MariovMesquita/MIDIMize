@@ -20,17 +20,17 @@ cSynth::cSynth()
     this->FsSynth = new_fluid_synth(this->FsSettings);
 
     /* Load soundfonts */
-    /*SAW*/
-    this->sFonts[2].name="saw";
-    this->sFonts[2].fileName=SF_SAW_PATH;
+    /*ANALOG*/
+    this->sFonts[2].name="analog";
+    this->sFonts[2].fileName=SF_ANALOG_PATH;
     this->sFonts[2].id = fluid_synth_sfload(this->FsSynth, this->sFonts[2].fileName, 1);
-    /*TRIANGLE*/
-    this->sFonts[1].name="triangle";
-    this->sFonts[1].fileName=SF_TRIANGLE_PATH;
+    /*AMBIANCE*/
+    this->sFonts[1].name="ambiance";
+    this->sFonts[1].fileName=SF_AMBIANCE_PATH;
     this->sFonts[1].id = fluid_synth_sfload(this->FsSynth, this->sFonts[1].fileName, 1);
-    /*SINE*/
-    this->sFonts[0].name="sine";
-    this->sFonts[0].fileName=SF_SINE_PATH;
+    /*COSMIC*/
+    this->sFonts[0].name="cosmic";
+    this->sFonts[0].fileName=SF_COSMIC_PATH;
     this->sFonts[0].id = fluid_synth_sfload(this->FsSynth, this->sFonts[0].fileName, 1);
 
     /* Create Audio Driver */
@@ -58,10 +58,10 @@ void cSynth::stop_midi()
 
 void cSynth::init_values()
 {
-    this->synthOn = 0;
+    this->synthOn = false;
     this->pitchBend = 0;
-    this->gain = 0; // meter aqui o ganho normalizado
-    this->oscillator = SINE;
+    this->gain = 0.8; // meter aqui o ganho normalizado
+    this->oscillator = COSMIC;
 
     this->chorus.active = 0;
     this->chorus.nr = 0;
@@ -175,19 +175,22 @@ void cSynth::setOscillator()
 {   
     switch(this->oscillator)
     {
-        case SINE:
+        case COSMIC:
             //this->oscillator = SINE;
             fluid_synth_sfload(this->FsSynth, this->sFonts[0].fileName, 1);
+            this->setGain(0.8);
             break;
 
-        case TRIANGLE:
+        case AMBIANCE:
             //this->oscillator = TRIANGLE;
             fluid_synth_sfload(this->FsSynth, this->sFonts[1].fileName, 1);
+            this->setGain(0.8);
             break;
 
-        case SAW:
+        case ANALOG:
             //this->oscillator = SAW;
             fluid_synth_sfload(this->FsSynth, this->sFonts[2].fileName, 1);
+            this->setGain(0.6);
             break;
     }
 }

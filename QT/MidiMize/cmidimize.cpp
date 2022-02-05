@@ -8,9 +8,11 @@ CMidiMize::CMidiMize(QtWrapper &QtWrap) : led_thread(&this->led_cmds, tLed_job)
     this->led_thread.create();
     QtWrap.solo=true;
 
+    /* PWR LED ON*/
     ledCommand_t cmd={55, PWR_ON};
     this->led_cmds.pushBuffer(cmd);
-    system("amixer set Headphone 100%");
+
+    system("amixer set Headphone 0%"); // START MUTED
 }
 
 CMidiMize* CMidiMize::instance=NULL;

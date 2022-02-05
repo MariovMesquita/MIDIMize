@@ -10,6 +10,10 @@
         <file>triangle.png</file>
         <file>sine.png</file>
         <file>1722168.png</file>
+        <file>saw.png</file>
+        <file>ambiance.png</file>
+        <file>cosmic.png</file>
+        <file>saw2.png</file>
     </qresource>
     <qresource prefix="/fonts">
         <file>Syntha Nova Black.ttf</file>

@@ -769,7 +769,7 @@
       </rect>
      </property>
      <property name="maximum">
-      <number>100</number>
+      <number>80</number>
      </property>
      <property name="notchesVisible">
       <bool>true</bool>
@@ -783,6 +783,9 @@
        <width>81</width>
        <height>75</height>
       </rect>
+     </property>
+     <property name="maximum">
+      <number>2</number>
      </property>
      <property name="notchesVisible">
       <bool>true</bool>
@@ -964,7 +967,7 @@
       </rect>
      </property>
      <property name="maximum">
-      <number>10</number>
+      <number>5</number>
      </property>
      <property name="notchesVisible">
       <bool>true</bool>
@@ -1200,7 +1203,7 @@
       </rect>
      </property>
      <property name="maximum">
-      <number>100</number>
+      <number>80</number>
      </property>
      <property name="invertedAppearance">
       <bool>false</bool>
@@ -1217,6 +1220,9 @@
        <width>81</width>
        <height>75</height>
       </rect>
+     </property>
+     <property name="maximum">
+      <number>2</number>
      </property>
      <property name="notchesVisible">
       <bool>true</bool>
@@ -1423,7 +1429,7 @@
       </rect>
      </property>
      <property name="maximum">
-      <number>10</number>
+      <number>5</number>
      </property>
      <property name="wrapping">
       <bool>false</bool>
@@ -1516,7 +1522,7 @@
       <rect>
        <x>30</x>
        <y>80</y>
-       <width>71</width>
+       <width>91</width>
        <height>141</height>
       </rect>
      </property>
@@ -1528,12 +1534,12 @@
         </property>
         <property name="icon">
          <iconset resource="../MidiMize/resources.qrc">
-          <normaloff>:/new/waveIcons/sine.png</normaloff>:/new/waveIcons/sine.png</iconset>
+          <normaloff>:/new/waveIcons/cosmic.png</normaloff>:/new/waveIcons/cosmic.png</iconset>
         </property>
         <property name="iconSize">
          <size>
-          <width>30</width>
-          <height>30</height>
+          <width>35</width>
+          <height>35</height>
          </size>
         </property>
         <property name="checked">
@@ -1548,12 +1554,12 @@
         </property>
         <property name="icon">
          <iconset resource="../MidiMize/resources.qrc">
-          <normaloff>:/new/waveIcons/triangle.png</normaloff>:/new/waveIcons/triangle.png</iconset>
+          <normaloff>:/new/waveIcons/ambiance.png</normaloff>:/new/waveIcons/ambiance.png</iconset>
         </property>
         <property name="iconSize">
          <size>
-          <width>30</width>
-          <height>30</height>
+          <width>35</width>
+          <height>35</height>
          </size>
         </property>
        </widget>
@@ -1565,12 +1571,12 @@
         </property>
         <property name="icon">
          <iconset resource="../MidiMize/resources.qrc">
-          <normaloff>:/new/waveIcons/1722168.png</normaloff>:/new/waveIcons/1722168.png</iconset>
+          <normaloff>:/new/waveIcons/saw2.png</normaloff>:/new/waveIcons/saw2.png</iconset>
         </property>
         <property name="iconSize">
          <size>
-          <width>30</width>
-          <height>30</height>
+          <width>35</width>
+          <height>35</height>
          </size>
         </property>
        </widget>
@@ -1620,7 +1626,7 @@
       <rect>
        <x>30</x>
        <y>80</y>
-       <width>71</width>
+       <width>81</width>
        <height>141</height>
       </rect>
      </property>
@@ -1632,12 +1638,12 @@
         </property>
         <property name="icon">
          <iconset resource="../MidiMize/resources.qrc">
-          <normaloff>:/new/waveIcons/sine.png</normaloff>:/new/waveIcons/sine.png</iconset>
+          <normaloff>:/new/waveIcons/cosmic.png</normaloff>:/new/waveIcons/cosmic.png</iconset>
         </property>
         <property name="iconSize">
          <size>
-          <width>30</width>
-          <height>30</height>
+          <width>35</width>
+          <height>35</height>
          </size>
         </property>
         <property name="checked">
@@ -1652,12 +1658,12 @@
         </property>
         <property name="icon">
          <iconset resource="../MidiMize/resources.qrc">
-          <normaloff>:/new/waveIcons/triangle.png</normaloff>:/new/waveIcons/triangle.png</iconset>
+          <normaloff>:/new/waveIcons/ambiance.png</normaloff>:/new/waveIcons/ambiance.png</iconset>
         </property>
         <property name="iconSize">
          <size>
-          <width>30</width>
-          <height>30</height>
+          <width>35</width>
+          <height>35</height>
          </size>
         </property>
        </widget>
@@ -1669,12 +1675,12 @@
         </property>
         <property name="icon">
          <iconset resource="../MidiMize/resources.qrc">
-          <normaloff>:/new/waveIcons/1722168.png</normaloff>:/new/waveIcons/1722168.png</iconset>
+          <normaloff>:/new/waveIcons/saw2.png</normaloff>:/new/waveIcons/saw2.png</iconset>
         </property>
         <property name="iconSize">
          <size>
-          <width>30</width>
-          <height>30</height>
+          <width>35</width>
+          <height>35</height>
          </size>
         </property>
        </widget>
@@ -1746,9 +1752,9 @@
     <widget class="QLabel" name="gainLabel">
      <property name="geometry">
       <rect>
-       <x>60</x>
+       <x>40</x>
        <y>0</y>
-       <width>61</width>
+       <width>101</width>
        <height>41</height>
       </rect>
      </property>
@@ -1761,7 +1767,7 @@
       </font>
      </property>
      <property name="text">
-      <string>GAIN</string>
+      <string>VOLUME</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -1777,7 +1783,7 @@
       </rect>
      </property>
      <property name="maximum">
-      <number>30</number>
+      <number>100</number>
      </property>
      <property name="singleStep">
       <number>1</number>

@@ -581,6 +581,10 @@ qrc_resources.cpp: ../MidiMize/resources.qrc \
 		../../../../buildroot/buildroot-2021.02.5/output/host/bin/rcc \
 		../MidiMize/1722168.png \
 		../MidiMize/sine.png \
+		../MidiMize/saw.png \
+		../MidiMize/cosmic.png \
+		../MidiMize/saw2.png \
+		../MidiMize/ambiance.png \
 		../MidiMize/triangle.png \
 		../MidiMize/White&RedFull.png \
 		../MidiMize/Black&Red_full.png \
