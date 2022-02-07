@@ -20,7 +20,7 @@ int32_t freq = 0;
 int32_t ctrl = 0;
 
 static struct timer_list osc1_timer;
-bool blink = 0;
+bool blink = false;
 
 dev_t dev = 0; // holds major and minor numbers
 static struct class *dev_class; // holds device class
@@ -54,23 +54,25 @@ void timer_callback(struct timer_list* data)
     {
         gpio_set_value(GPIO_OSC1_LED, 1);
     }
-    mod_timer(&osc1_timer, jiffies + msecs_to_jiffies(freq));
+    mod_timer(&osc1_timer, jiffies + msecs_to_jiffies(freq)); // timer will expire after freq miliseconds
 }
 
 static long osc1_led_ioctl(struct file* file, unsigned int cmd, unsigned long arg)
 {
     switch(cmd)
     {
+        /* BLINK IOCTL FUNCTION */
         case BLK:
             if(copy_from_user(&freq, (int32_t*) arg, sizeof(freq)))
             {
                 pr_err("ERROR writing data\n");
             }
             blink = 1;
-            mod_timer(&osc1_timer, jiffies + msecs_to_jiffies(freq));
+            mod_timer(&osc1_timer, jiffies + msecs_to_jiffies(freq)); // timer will expire after freq miliseconds
             pr_info("Blinking led - %d ms\n", freq);
             break;
         
+        /* POWER IOCTL FUNCTION */
         case PWR:
             if(copy_from_user(&ctrl, (int32_t*) arg, sizeof(ctrl)))
             {
@@ -78,20 +80,20 @@ static long osc1_led_ioctl(struct file* file, unsigned int cmd, unsigned long ar
             }   
             if(ctrl == 1)
             {
-                if (blink == 1)
+                if (blink)
                 {
                     del_timer(&osc1_timer);
-                    blink=0;
+                    blink=false;
                 }
                 gpio_set_value(GPIO_OSC1_LED, 1);
                 pr_info("osc_1_led ON\n");
             }
-            else if(ctrl == 0)
+            else if(ctrl == false)
             {
-                if (blink == 1)
+                if (blink )
                 {
                     del_timer(&osc1_timer);
-                    blink=0;
+                    blink=false;
                 }
                 gpio_set_value(GPIO_OSC1_LED, 0);        
                 pr_info("osc_1_led OFF\n");    
@@ -160,7 +162,7 @@ static int __init osc1_led_init(void)
        
        return -1;
     }
-    pr_info("Device: osc2_led  Major = %d  Minor = %d  \n", MAJOR(dev), MINOR(dev));
+    pr_info("Device: osc1_led  Major = %d  Minor = %d  \n", MAJOR(dev), MINOR(dev));
 
     /* Add device to character device subsystem */
     cdev_init(&osc1_led_cdev,&fops);
@@ -222,12 +224,12 @@ static int __init osc1_led_init(void)
         return -1;
     }
 
-    timer_setup(&osc1_timer, timer_callback, 0);
-    osc1_timer.expires = jiffies + HZ;
-    //DEFINE_TIMER(osc2timer, timer_callback, jiffies + HZ, 0);
+    timer_setup(&osc1_timer, timer_callback, 0); // kernel timer setup
+    osc1_timer.expires = jiffies + HZ; // kernel timer timeout // HZ = 100hz frequency of the system timer (tick rate)
+    
 
-    gpio_direction_output(GPIO_OSC1_LED, 0);
-    gpio_export(GPIO_OSC1_LED, false); // direction_may_change = false -> user space is not allowed to change GPIO direction
+    gpio_direction_output(GPIO_OSC1_LED, 0); // Sets GPIO 24 as an output 
+    gpio_export(GPIO_OSC1_LED, false);  // direction_may_change = false -> user space is not allowed to change GPIO direction
     
     pr_info("Device osc1_led created. Kernel module inserted. \n");
      

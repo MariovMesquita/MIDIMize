@@ -58,9 +58,11 @@ void cSynth::stop_midi()
 
 void cSynth::init_values()
 {
+    this->current_note=0;
+
     this->synthOn = false;
     this->pitchBend = 0;
-    this->gain = 0.8; // meter aqui o ganho normalizado
+    this->gain = 0.8; // normalized gain
     this->oscillator = COSMIC;
 
     this->chorus.active = 0;
@@ -176,19 +178,16 @@ void cSynth::setOscillator()
     switch(this->oscillator)
     {
         case COSMIC:
-            //this->oscillator = SINE;
             fluid_synth_sfload(this->FsSynth, this->sFonts[0].fileName, 1);
             this->setGain(0.8);
             break;
 
         case AMBIANCE:
-            //this->oscillator = TRIANGLE;
             fluid_synth_sfload(this->FsSynth, this->sFonts[1].fileName, 1);
             this->setGain(0.8);
             break;
 
         case ANALOG:
-            //this->oscillator = SAW;
             fluid_synth_sfload(this->FsSynth, this->sFonts[2].fileName, 1);
             this->setGain(0.6);
             break;

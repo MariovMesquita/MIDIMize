@@ -7,6 +7,8 @@ MidiMizeForm::MidiMizeForm(QWidget *parent)
 {
     setupUi(this);
     CMidiMize* MIDImize = CMidiMize::getInstance(QtWrap);
+    this->osc1KeyBrd=false;
+    this->osc2KeyBrd=false;
 }
 
 MidiMizeForm::~MidiMizeForm(){}
@@ -19,27 +21,25 @@ void MidiMizeForm::on_gainDial_valueChanged(int value)
     setenv("MDMZ_VOLUME", cmd, 1);
 
     system("amixer set Headphone $MDMZ_VOLUME%");
-
-    /* MIDImize gain */
-//    QtWrap.synth[0]->setGain(static_cast<float>((value)/10.0));
-//    QtWrap.synth[1]->setGain(static_cast<float>((value)/10.0));
-
 }
 
 
-/*  MIDI LED HANDLERS */
+/*********************  MIDI LED HANDLERS *********************/
 
 int handle_midi_event_osc1(void* data, fluid_midi_event_t *event)
 {
     static int note_count = 0;
-    QtWrapper *led = (QtWrapper*)data;
-    int key = fluid_midi_event_get_key(event);
-    int type = fluid_midi_event_get_type(event);
     char type_c[24];
     char key_c[24];
     ledCommand_t cmd, cmd_osc, cmd_pwr;
+    QtWrapper *led = (QtWrapper*)data;
+
+    /* Get pressed key */
+    int key = fluid_midi_event_get_key(event);
+    sprintf(key_c, "Key: %d\n", key);
+    /* Get MIDI event type */
+    int type = fluid_midi_event_get_type(event);
     sprintf(type_c, "Event type: %d\n", type);
-    sprintf(key_c, "Key: %d\n", type);
 
     if(type==144)// Note On
     {
@@ -78,14 +78,18 @@ int handle_midi_event_osc1(void* data, fluid_midi_event_t *event)
 int handle_midi_event_osc2(void* data, fluid_midi_event_t *event)
 {
     static int note_count = 0;
-    QtWrapper *led = (QtWrapper*)data;
-    int key = fluid_midi_event_get_key(event);
-    int type = fluid_midi_event_get_type(event);
     char type_c[24];
     char key_c[24];
     ledCommand_t cmd, cmd_osc, cmd_pwr;
+    QtWrapper *led = (QtWrapper*)data;
+
+    /* Get pressed key */
+    int key = fluid_midi_event_get_key(event);
+    sprintf(key_c, "Key: %d\n", key);
+    /* Get MIDI event type */
+    int type = fluid_midi_event_get_type(event);
     sprintf(type_c, "Event type: %d\n", type);
-    sprintf(key_c, "Key: %d\n", type);
+
 
     if(type==144) // Note On
     {
@@ -143,35 +147,38 @@ void MidiMizeForm::init_osc2Led_midi()
     this->osc2LedDriver = new_fluid_midi_driver(this->osc2LedSettings, fluid_midi_router_handle_midi_event, this->osc2LedRouter);
 }
 
-/* END OF MIDI LED HANDLERS */
+/********************* END OF MIDI LED HANDLERS *********************/
 
-
+/********************* TURN OSCILLATOR 1 ON / OFF *******************/
 void MidiMizeForm::on_osc1Pbutton_clicked(bool checked)
 {
     if(checked)
     {
-        QtWrap.synth[0]->synthOn=true;
+        QtWrap.synth[0]->synthOn=true; // OSCILLATOR 1 ON
 
         if(QtWrap.solo) // SOLO mode
         {
-            QtWrap.synth[0]->setOscillator();
-            ledCommand_t cmd={55, OSC_1_BLK};
-            QtWrap.synth[0]->noteOn(1, 55, 50);
-            QtWrap.synth[0]->current_note = 55;
-            QtWrap.led_ctrl->pushBuffer(cmd);
+            QtWrap.synth[0]->setOscillator(); 
+            if(QtWrap.synth[0]->current_note!=0)
+            {
+                ledCommand_t cmd={QtWrap.synth[1]->current_note, OSC_1_BLK};
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
         }
 
         else if(!QtWrap.solo) // MIDI mode
         {
-            system("aconnect 24 128");
-            system("aconnect 24 130");
+            system("aconnect 24 128"); // Connect midi driver - sound
+            system("aconnect 24 130"); // Connect midi driver - LED
             QtWrap.synth[0]->setOscillator();
         }
     }
 
     else
     {
-        QtWrap.synth[0]->synthOn=false;
+        QtWrap.synth[0]->synthOn=false; // OSCILLATOR 1 OFF
+        
         if(QtWrap.solo) // SOLO mode
         {
             ledCommand_t cmd={ 55, OSC_1_OFF};
@@ -181,11 +188,12 @@ void MidiMizeForm::on_osc1Pbutton_clicked(bool checked)
 
         else if(!QtWrap.solo) // MIDI mode
         {
-            system("aconnect -d 24 128");
-            system("aconnect -d 24 130");
+            system("aconnect -d 24 128"); // Disconnect midi driver - sound
+            system("aconnect -d 24 130"); // Disconnect midi driver - LED
         }
     }
 }
+/*****************************************************************/
 
 void MidiMizeForm::on_osc1TriRbutton_toggled(bool checked)
 {
@@ -244,6 +252,7 @@ void MidiMizeForm::on_osc1SawRbutton_toggled(bool checked)
     }
 }
 
+/********************* TURN OSCILLATOR 2 ON / OFF *******************/
 void MidiMizeForm::on_osc2Pbutton_clicked(bool checked)
 {
     if(checked)
@@ -253,10 +262,12 @@ void MidiMizeForm::on_osc2Pbutton_clicked(bool checked)
         if(QtWrap.solo) // SOLO mode
         {
             QtWrap.synth[1]->setOscillator();
-            ledCommand_t cmd={45, OSC_2_BLK};
-            QtWrap.synth[1]->noteOn(1, 45, 50);
-            QtWrap.synth[1]->current_note = 45;
-            QtWrap.led_ctrl->pushBuffer(cmd);
+            if(QtWrap.synth[1]->current_note!=0)
+            {
+                ledCommand_t cmd={QtWrap.synth[1]->current_note, OSC_2_BLK};
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
         }
 
         else if(!QtWrap.solo) // MIDI mode
@@ -284,6 +295,7 @@ void MidiMizeForm::on_osc2Pbutton_clicked(bool checked)
         }
     }
 }
+/*****************************************************************/
 
 void MidiMizeForm::on_osc2SineRbutton_toggled(bool checked)
 {
@@ -500,22 +512,15 @@ void MidiMizeForm::on_osc1ChorusSpeed_valueChanged(int value)
 
 void MidiMizeForm::on_aboutButton_clicked()
 {
-    //aboutForm about;
-    //about.exec();
+    system("aplay /etc/MIDImize/music/wake_up.wav &");
 }
 
+/********************* CHANGE TO MIDI MODE ***********************/
 void MidiMizeForm::on_midiRbutton_clicked(bool checked)
 {
     if(checked)
     {
-        QtWrap.solo=false;
-
-        QtWrap.synth[0]->init_midi();
-        QtWrap.synth[1]->init_midi();
-
-        init_osc1Led_midi();
-        init_osc2Led_midi();
-
+        /* TURN OFF LED's AND SOUND FROM SOLO MODE */
         if(QtWrap.synth[0]->synthOn)
         {
             ledCommand_t cmd={55, OSC_1_OFF};
@@ -534,9 +539,19 @@ void MidiMizeForm::on_midiRbutton_clicked(bool checked)
             system("aconnect 24 129");
             system("aconnect 24 131");
         }
+
+        /* CHANGE TO MIDI MODE */
+        QtWrap.solo=false;
+
+        QtWrap.synth[0]->init_midi();
+        QtWrap.synth[1]->init_midi();
+        init_osc1Led_midi();
+        init_osc2Led_midi();
     }
 }
+/*****************************************************************/
 
+/********************* CHANGE TO SOLO MODE ***********************/
 void MidiMizeForm::on_soloRbutton_clicked(bool checked)
 {
     if(checked)
@@ -584,4 +599,1025 @@ void MidiMizeForm::on_soloRbutton_clicked(bool checked)
         }
     }
 
+}
+/*****************************************************************/
+
+void MidiMizeForm::on_C4_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = C4;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={C4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = C4;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={C4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==C4 || QtWrap.synth[1]->current_note==C4))
+            {
+                    if(QtWrap.synth[0]->current_note==C4)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={C4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==C4)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={C4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_Db4_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = Db4;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={Db4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = Db4;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={Db4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Db4 || QtWrap.synth[1]->current_note==Db4))
+            {
+                    if(QtWrap.synth[0]->current_note==Db4)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={Db4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==Db4)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={Db4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_D4_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = D4;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={D4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = D4;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={D4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==D4 || QtWrap.synth[1]->current_note==D4))
+            {
+                    if(QtWrap.synth[0]->current_note==D4)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={D4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==D4)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={D4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_Eb4_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = Eb4;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={Eb4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = Eb4;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={Eb4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Eb4 || QtWrap.synth[1]->current_note==Eb4))
+            {
+                    if(QtWrap.synth[0]->current_note==Eb4)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={Eb4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==Eb4)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={Eb4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_E4_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = E4;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={E4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = E4;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={E4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==E4 || QtWrap.synth[1]->current_note==E4))
+            {
+                    if(QtWrap.synth[0]->current_note==E4)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={E4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==E4)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={E4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_F4_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = F4;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={F4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = F4;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={F4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==F4 || QtWrap.synth[1]->current_note==F4))
+            {
+                    if(QtWrap.synth[0]->current_note==F4)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={F4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==F4)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={F4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_Gb4_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = Gb4;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={Gb4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = Gb4;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={Gb4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Gb4 || QtWrap.synth[1]->current_note==Gb4))
+            {
+                    if(QtWrap.synth[0]->current_note==Gb4)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={Gb4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==Gb4)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={Gb4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_G4_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = G4;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={G4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = G4;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={G4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==G4 || QtWrap.synth[1]->current_note==G4))
+            {
+                    if(QtWrap.synth[0]->current_note==G4)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={G4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==G4)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={G4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_Ab4_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = Ab4;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={Ab4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = Ab4;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={Ab4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Ab4 || QtWrap.synth[1]->current_note==Ab4))
+            {
+                    if(QtWrap.synth[0]->current_note==Ab4)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={Ab4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==Ab4)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={Ab4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_A4_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = A4;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={A4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = A4;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={A4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==A4 || QtWrap.synth[1]->current_note==A4))
+            {
+                    if(QtWrap.synth[0]->current_note==A4)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={A4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==A4)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={A4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_Bb4_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = Bb4;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={Bb4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = Bb4;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={Bb4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Bb4 || QtWrap.synth[1]->current_note==Bb4))
+            {
+                    if(QtWrap.synth[0]->current_note==Bb4)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={Bb4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==Bb4)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={Bb4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_B4_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = B4;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={B4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = B4;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={B4, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==B4 || QtWrap.synth[1]->current_note==B4))
+            {
+                    if(QtWrap.synth[0]->current_note==B4)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={B4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==B4)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={B4, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_C5_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = C5;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={C5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = C5;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={C5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==C5 || QtWrap.synth[1]->current_note==C5))
+            {
+                    if(QtWrap.synth[0]->current_note==C5)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={C5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==C5)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={C5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_Db5_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = Db5;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={Db5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = Db5;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={Db5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Db5 || QtWrap.synth[1]->current_note==Db5))
+            {
+                    if(QtWrap.synth[0]->current_note==Db5)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={Db5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==Db5)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={Db5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_D5_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = D5;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={D5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = D5;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={D5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==D5 || QtWrap.synth[1]->current_note==D5))
+            {
+                    if(QtWrap.synth[0]->current_note==D5)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={D5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==D5)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={D5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_Eb5_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = Eb5;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={Eb5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = Eb5;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={Eb5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Eb5 || QtWrap.synth[1]->current_note==Eb5))
+            {
+                    if(QtWrap.synth[0]->current_note==Eb5)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={Eb5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==Eb5)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={Eb5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_E5_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = E5;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={E5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = E5;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={E5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==E5 || QtWrap.synth[1]->current_note==E5))
+            {
+                    if(QtWrap.synth[0]->current_note==E5)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={E5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==E5)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={E5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_F5_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = F5;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={F5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = F5;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={F5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==F5 || QtWrap.synth[1]->current_note==F5))
+            {
+                    if(QtWrap.synth[0]->current_note==F5)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={F5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==F5)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={F5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_Gb5_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = Gb5;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={Gb5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = Gb5;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={Gb5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Gb5 || QtWrap.synth[1]->current_note==Gb5))
+            {
+                    if(QtWrap.synth[0]->current_note==Gb5)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={Gb5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==Gb5)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={Gb5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
+}
+
+void MidiMizeForm::on_G5_Pb_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[0]->current_note = G5;
+                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={G5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+
+            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+            {
+                this->osc1KeyBrd=true;
+                QtWrap.synth[1]->current_note = G5;
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                ledCommand_t cmd={G5, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+        }
+    }
+    else
+    {
+        if(QtWrap.solo) // SOLO mode
+        {
+            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==G5 || QtWrap.synth[1]->current_note==G5))
+            {
+                    if(QtWrap.synth[0]->current_note==G5)
+                    {
+                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+                        QtWrap.synth[0]->current_note=0;
+                        ledCommand_t cmd={G5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+
+                    if(QtWrap.synth[1]->current_note==G5)
+                    {
+                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+                        QtWrap.synth[1]->current_note=0;
+                        ledCommand_t cmd={G5, OSC_1_OFF};
+                        QtWrap.led_ctrl->pushBuffer(cmd);
+                    }
+            }
+        }
+    }
 }

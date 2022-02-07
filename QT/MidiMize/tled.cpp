@@ -25,7 +25,6 @@ int TLed::create()
 void* tLed_job(void* opaque)
 {
     CProtectedBuffer<ledCommand_t>* my_buffer = (CProtectedBuffer<ledCommand_t>*)opaque;
-    //CProtectedBuffer<ledCommand_t>& commands = *((CProtectedBuffer<ledCommand_t> *)cmdBuffer);
 
     int osc1, osc2, pwr;
     int32_t on=1;
@@ -35,9 +34,9 @@ void* tLed_job(void* opaque)
     system("insmod /etc/MIDImize/device_drivers/osc1_led_rpi4.ko");
     system("insmod /etc/MIDImize/device_drivers/pwr_led_rpi4.ko");
 
-    osc1 = open("/dev/osc1_led", O_WRONLY);
-    osc2 = open("/dev/osc2_led", O_WRONLY);
-    pwr = open("/dev/pwr_led", O_WRONLY);
+    osc1 = open("/dev/osc1_led", O_WRONLY); // Open oscillator 1 LED device file
+    osc2 = open("/dev/osc2_led", O_WRONLY); // Open oscillator 2 LED device file
+    pwr = open("/dev/pwr_led", O_WRONLY);   // Open power LED device file
 
     while(1)
     {
@@ -45,6 +44,7 @@ void* tLed_job(void* opaque)
         my_buffer->popBuffer(cmd);
         switch(cmd.led_cmd)
         {
+            /* OSCILLATOR 1 LED */
             case OSC_1_ON:
                 ioctl(osc1, PWR, (int32_t*) &on);
                 break;
@@ -57,6 +57,7 @@ void* tLed_job(void* opaque)
                 ioctl(osc1, BLK, (int32_t*) &cmd.note);
                 break;
 
+            /* OSCILLATOR 2 LED */
             case OSC_2_ON:
                 ioctl(osc2, PWR, (int32_t*) &on);
                 break;
@@ -69,6 +70,7 @@ void* tLed_job(void* opaque)
                 ioctl(osc2, BLK, (int32_t*) &cmd.note);
                 break;
 
+            /* POWER LED */
             case PWR_ON:
                 ioctl(pwr, PWR, (int32_t*) &on);
                 break;

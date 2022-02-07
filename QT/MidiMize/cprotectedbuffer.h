@@ -30,20 +30,21 @@ template <typename DataType>
 void CProtectedBuffer<DataType>::pushBuffer(DataType& toPush)
 {
     pthread_mutex_lock(&this->bufferMutex);
-    //printf("I'm in push!\ntail:%d\nfront:%d\n", this->tail, this->front);
 
-    while(this->front == this->tail && this->frontOdd != this->tailOdd)
+    while(this->front == this->tail && this->frontOdd != this->tailOdd) // While buffer is full
     {
-        pthread_cond_wait(&this->bufferNotFull, &this->bufferMutex);
+        pthread_cond_wait(&this->bufferNotFull, &this->bufferMutex); // Wait for NOT FULL signal
     }
 
-    if(this->front == this->tail && this->frontOdd == this->tailOdd)
+    if(this->front == this->tail && this->frontOdd == this->tailOdd) // Buffer has at least one element
     {
-        pthread_cond_signal(&this->bufferNotEmpty);
+        pthread_cond_signal(&this->bufferNotEmpty); // Send BUFFER NOT EMPTY signal
     }
-    this->dataBuffer[this->front] = toPush;
-    this->front++, this->front &= 0xFF;
-    if(!this->front)
+
+    this->dataBuffer[this->front] = toPush; // Add data to buffer
+    this->front++, this->front &= 0xFF; // Increment front
+
+    if(!this->front) // One lap completed
     {
         this->frontOdd = !this->frontOdd;
     }
@@ -54,20 +55,21 @@ template <typename DataType>
 void CProtectedBuffer<DataType>::popBuffer(DataType& toPop)
 {
     pthread_mutex_lock(&this->bufferMutex);
-    //printf("I'm in pop!\ntail:%d\nfront:%d\n", this->tail, this->front);
 
-    while(this->front == this->tail && this->frontOdd == this->tailOdd)
+    while(this->front == this->tail && this->frontOdd == this->tailOdd) // While buffer is empty
     {
-        pthread_cond_wait(&this->bufferNotEmpty, &this->bufferMutex);
+        pthread_cond_wait(&this->bufferNotEmpty, &this->bufferMutex); // Wait for NOT EMPTY signal
     }
 
-    if(this->front == this->tail && this->frontOdd != this->tailOdd)
+    if(this->front == this->tail && this->frontOdd != this->tailOdd) // Buffer has at least one free space
     {
-        pthread_cond_signal(&this->bufferNotFull);
+        pthread_cond_signal(&this->bufferNotFull); // Send BUFFER NOT FULL signal
     }
-    toPop = this->dataBuffer[this->tail];
-    this->tail++, this->tail &= 0xFF;
-    if(!this->tail)
+
+    toPop = this->dataBuffer[this->tail]; // Read data from buffer
+    this->tail++, this->tail &= 0xFF; // Increment tail
+
+    if(!this->tail) // One lap completed
     {
         this->tailOdd = !this->tailOdd;
     }

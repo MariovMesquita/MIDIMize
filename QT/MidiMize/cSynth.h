@@ -141,7 +141,6 @@ class cSynth
         void init_midi();
         void stop_midi();
 
-        //int synthID;
         chorus_settings_t chorus;
         reverb_settings_t reverb;
         oscillator_t oscillator;
