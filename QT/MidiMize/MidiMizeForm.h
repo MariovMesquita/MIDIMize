@@ -24,6 +24,8 @@ public:
     QtWrapper QtWrap;
     void init_osc1Led_midi();
     void init_osc2Led_midi();
+    void kbrdKeyOn(noteNames note);
+    void kbrdKeyOff(noteNames note);
 
     fluid_midi_router_t* osc1LedRouter;
     fluid_midi_driver_t* osc1LedDriver;
@@ -33,8 +35,8 @@ public:
     fluid_settings_t* osc1LedSettings;
 
     noteNames notes;
-    bool osc1KeyBrd;
-    bool osc2KeyBrd;
+    //bool osc1KeyBrd;
+    //bool osc2KeyBrd;
 
     ~MidiMizeForm();
 

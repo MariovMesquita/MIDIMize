@@ -7,8 +7,6 @@ MidiMizeForm::MidiMizeForm(QWidget *parent)
 {
     setupUi(this);
     CMidiMize* MIDImize = CMidiMize::getInstance(QtWrap);
-    this->osc1KeyBrd=false;
-    this->osc2KeyBrd=false;
 }
 
 MidiMizeForm::~MidiMizeForm(){}
@@ -512,7 +510,7 @@ void MidiMizeForm::on_osc1ChorusSpeed_valueChanged(int value)
 
 void MidiMizeForm::on_aboutButton_clicked()
 {
-    system("aplay /etc/MIDImize/music/wake_up.wav &");
+    system("aplay /etc/MIDImize/music/wake_up.wav &"); // This is for you Pires! \m/
 }
 
 /********************* CHANGE TO MIDI MODE ***********************/
@@ -602,105 +600,81 @@ void MidiMizeForm::on_soloRbutton_clicked(bool checked)
 }
 /*****************************************************************/
 
+
+/******************* MIDI Keyboard GUI functions ********************/
+
+void MidiMizeForm::kbrdKeyOn(noteNames note)
+{
+    if(QtWrap.solo) // SOLO mode
+    {
+        if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+        {
+            QtWrap.synth[0]->current_note = note;
+            QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+            ledCommand_t cmd={note, OSC_1_BLK};
+            QtWrap.led_ctrl->pushBuffer(cmd);
+        }
+
+        if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+        {
+            QtWrap.synth[1]->current_note = note;
+            QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+            ledCommand_t cmd={note, OSC_2_BLK};
+            QtWrap.led_ctrl->pushBuffer(cmd);
+        }
+    }
+}
+
+void MidiMizeForm::kbrdKeyOff(noteNames note)
+{
+    if(QtWrap.solo) // SOLO mode
+    {
+        if(QtWrap.synth[0]->current_note==note)
+        {
+            QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+            QtWrap.synth[0]->current_note=0;
+            ledCommand_t cmd={note, OSC_1_OFF};
+            QtWrap.led_ctrl->pushBuffer(cmd);
+            }
+    }
+
+    if(QtWrap.synth[1]->current_note==note)
+    {
+        if(QtWrap.synth[1]->current_note==note)
+        {
+            QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+            QtWrap.synth[1]->current_note=0;
+            ledCommand_t cmd={note, OSC_2_OFF};
+            QtWrap.led_ctrl->pushBuffer(cmd);
+        }
+    }
+}
+
+/*************************************************************/
+
+
 void MidiMizeForm::on_C4_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = C4;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={C4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = C4;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={C4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(C4);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==C4 || QtWrap.synth[1]->current_note==C4))
-            {
-                    if(QtWrap.synth[0]->current_note==C4)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={C4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==C4)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={C4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(C4);
     }
 }
+
 
 void MidiMizeForm::on_Db4_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = Db4;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={Db4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = Db4;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={Db4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(Db4);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Db4 || QtWrap.synth[1]->current_note==Db4))
-            {
-                    if(QtWrap.synth[0]->current_note==Db4)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={Db4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==Db4)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={Db4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(Db4);
     }
 }
 
@@ -708,50 +682,11 @@ void MidiMizeForm::on_D4_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = D4;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={D4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = D4;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={D4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(D4);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==D4 || QtWrap.synth[1]->current_note==D4))
-            {
-                    if(QtWrap.synth[0]->current_note==D4)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={D4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==D4)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={D4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(D4);
     }
 }
 
@@ -759,50 +694,11 @@ void MidiMizeForm::on_Eb4_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = Eb4;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={Eb4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = Eb4;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={Eb4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(Eb4);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Eb4 || QtWrap.synth[1]->current_note==Eb4))
-            {
-                    if(QtWrap.synth[0]->current_note==Eb4)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={Eb4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==Eb4)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={Eb4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(Eb4);
     }
 }
 
@@ -810,50 +706,11 @@ void MidiMizeForm::on_E4_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = E4;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={E4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = E4;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={E4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(E4);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==E4 || QtWrap.synth[1]->current_note==E4))
-            {
-                    if(QtWrap.synth[0]->current_note==E4)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={E4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==E4)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={E4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(E4);
     }
 }
 
@@ -861,50 +718,11 @@ void MidiMizeForm::on_F4_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = F4;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={F4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = F4;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={F4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(F4);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==F4 || QtWrap.synth[1]->current_note==F4))
-            {
-                    if(QtWrap.synth[0]->current_note==F4)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={F4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==F4)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={F4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(F4);
     }
 }
 
@@ -912,50 +730,11 @@ void MidiMizeForm::on_Gb4_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = Gb4;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={Gb4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = Gb4;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={Gb4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(Gb4);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Gb4 || QtWrap.synth[1]->current_note==Gb4))
-            {
-                    if(QtWrap.synth[0]->current_note==Gb4)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={Gb4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==Gb4)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={Gb4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(Gb4);
     }
 }
 
@@ -963,50 +742,11 @@ void MidiMizeForm::on_G4_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = G4;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={G4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = G4;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={G4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(G4);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==G4 || QtWrap.synth[1]->current_note==G4))
-            {
-                    if(QtWrap.synth[0]->current_note==G4)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={G4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==G4)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={G4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(G4);
     }
 }
 
@@ -1014,50 +754,11 @@ void MidiMizeForm::on_Ab4_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = Ab4;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={Ab4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = Ab4;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={Ab4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(Ab4);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Ab4 || QtWrap.synth[1]->current_note==Ab4))
-            {
-                    if(QtWrap.synth[0]->current_note==Ab4)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={Ab4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==Ab4)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={Ab4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(Ab4);
     }
 }
 
@@ -1065,50 +766,11 @@ void MidiMizeForm::on_A4_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = A4;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={A4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = A4;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={A4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(A4);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==A4 || QtWrap.synth[1]->current_note==A4))
-            {
-                    if(QtWrap.synth[0]->current_note==A4)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={A4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==A4)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={A4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(A4);
     }
 }
 
@@ -1116,50 +778,11 @@ void MidiMizeForm::on_Bb4_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = Bb4;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={Bb4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = Bb4;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={Bb4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(Bb4);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Bb4 || QtWrap.synth[1]->current_note==Bb4))
-            {
-                    if(QtWrap.synth[0]->current_note==Bb4)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={Bb4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==Bb4)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={Bb4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(Bb4);
     }
 }
 
@@ -1167,50 +790,11 @@ void MidiMizeForm::on_B4_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = B4;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={B4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = B4;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={B4, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(B4);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==B4 || QtWrap.synth[1]->current_note==B4))
-            {
-                    if(QtWrap.synth[0]->current_note==B4)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={B4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==B4)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={B4, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(B4);
     }
 }
 
@@ -1218,50 +802,11 @@ void MidiMizeForm::on_C5_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = C5;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={C5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = C5;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={C5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(C5);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==C5 || QtWrap.synth[1]->current_note==C5))
-            {
-                    if(QtWrap.synth[0]->current_note==C5)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={C5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==C5)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={C5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(C5);
     }
 }
 
@@ -1269,50 +814,11 @@ void MidiMizeForm::on_Db5_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = Db5;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={Db5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = Db5;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={Db5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(Db5);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Db5 || QtWrap.synth[1]->current_note==Db5))
-            {
-                    if(QtWrap.synth[0]->current_note==Db5)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={Db5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==Db5)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={Db5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(Db5);
     }
 }
 
@@ -1320,50 +826,11 @@ void MidiMizeForm::on_D5_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = D5;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={D5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = D5;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={D5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(D5);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==D5 || QtWrap.synth[1]->current_note==D5))
-            {
-                    if(QtWrap.synth[0]->current_note==D5)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={D5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==D5)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={D5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(D5);
     }
 }
 
@@ -1371,50 +838,11 @@ void MidiMizeForm::on_Eb5_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = Eb5;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={Eb5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = Eb5;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={Eb5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(Eb5);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Eb5 || QtWrap.synth[1]->current_note==Eb5))
-            {
-                    if(QtWrap.synth[0]->current_note==Eb5)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={Eb5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==Eb5)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={Eb5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(Eb5);
     }
 }
 
@@ -1422,50 +850,11 @@ void MidiMizeForm::on_E5_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = E5;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={E5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = E5;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={E5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(E5);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==E5 || QtWrap.synth[1]->current_note==E5))
-            {
-                    if(QtWrap.synth[0]->current_note==E5)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={E5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==E5)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={E5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(E5);
     }
 }
 
@@ -1473,50 +862,11 @@ void MidiMizeForm::on_F5_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = F5;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={F5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = F5;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={F5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(F5);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==F5 || QtWrap.synth[1]->current_note==F5))
-            {
-                    if(QtWrap.synth[0]->current_note==F5)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={F5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==F5)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={F5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(F5);
     }
 }
 
@@ -1524,50 +874,11 @@ void MidiMizeForm::on_Gb5_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = Gb5;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={Gb5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = Gb5;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={Gb5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(Gb5);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==Gb5 || QtWrap.synth[1]->current_note==Gb5))
-            {
-                    if(QtWrap.synth[0]->current_note==Gb5)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={Gb5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==Gb5)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={Gb5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(Gb5);
     }
 }
 
@@ -1575,49 +886,10 @@ void MidiMizeForm::on_G5_Pb_clicked(bool checked)
 {
     if(checked)
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[0]->current_note = G5;
-                QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
-                ledCommand_t cmd={G5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-
-            if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
-            {
-                this->osc1KeyBrd=true;
-                QtWrap.synth[1]->current_note = G5;
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
-                ledCommand_t cmd={G5, OSC_1_BLK};
-                QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-        }
+        kbrdKeyOn(G5);
     }
     else
     {
-        if(QtWrap.solo) // SOLO mode
-        {
-            if(QtWrap.synth[0]->current_note!=0 && (QtWrap.synth[0]->current_note==G5 || QtWrap.synth[1]->current_note==G5))
-            {
-                    if(QtWrap.synth[0]->current_note==G5)
-                    {
-                        QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-                        QtWrap.synth[0]->current_note=0;
-                        ledCommand_t cmd={G5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-
-                    if(QtWrap.synth[1]->current_note==G5)
-                    {
-                        QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-                        QtWrap.synth[1]->current_note=0;
-                        ledCommand_t cmd={G5, OSC_1_OFF};
-                        QtWrap.led_ctrl->pushBuffer(cmd);
-                    }
-            }
-        }
+        kbrdKeyOff(G5);
     }
 }
