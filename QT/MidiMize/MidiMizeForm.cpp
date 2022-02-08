@@ -34,7 +34,7 @@ int handle_midi_event_osc1(void* data, fluid_midi_event_t *event)
 
     /* Get pressed key */
     int key = fluid_midi_event_get_key(event);
-    sprintf(key_c, "Key: %d\n", key);
+    sprintf(key_c, "\nKey: %d\n", key);
     /* Get MIDI event type */
     int type = fluid_midi_event_get_type(event);
     sprintf(type_c, "Event type: %d\n", type);
@@ -83,7 +83,7 @@ int handle_midi_event_osc2(void* data, fluid_midi_event_t *event)
 
     /* Get pressed key */
     int key = fluid_midi_event_get_key(event);
-    sprintf(key_c, "Key: %d\n", key);
+    sprintf(key_c, "\nKey: %d\n", key);
     /* Get MIDI event type */
     int type = fluid_midi_event_get_type(event);
     sprintf(type_c, "Event type: %d\n", type);
@@ -159,8 +159,8 @@ void MidiMizeForm::on_osc1Pbutton_clicked(bool checked)
             QtWrap.synth[0]->setOscillator(); 
             if(QtWrap.synth[0]->current_note!=0)
             {
-                ledCommand_t cmd={QtWrap.synth[1]->current_note, OSC_1_BLK};
                 QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+                ledCommand_t cmd={QtWrap.synth[0]->current_note, OSC_1_BLK};
                 QtWrap.led_ctrl->pushBuffer(cmd);
             }
         }
@@ -207,7 +207,7 @@ void MidiMizeForm::on_osc1TriRbutton_toggled(bool checked)
         if(QtWrap.synth[0]->synthOn && QtWrap.solo)
         {
             QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-            QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 50);
+            QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
         }
     }
 }
@@ -226,7 +226,7 @@ void MidiMizeForm::on_osc1SineRbutton_toggled(bool checked)
         if(QtWrap.synth[0]->synthOn && QtWrap.solo)
         {
             QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-            QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 50);
+            QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
         }
     }
 }
@@ -245,7 +245,7 @@ void MidiMizeForm::on_osc1SawRbutton_toggled(bool checked)
         if(QtWrap.synth[0]->synthOn && QtWrap.solo)
         {
             QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-            QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 50);
+            QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
         }
     }
 }
@@ -310,7 +310,7 @@ void MidiMizeForm::on_osc2SineRbutton_toggled(bool checked)
         if(QtWrap.synth[1]->synthOn && QtWrap.solo)
         {
             QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-            QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 50);
+            QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
         }
     }
 }
@@ -330,7 +330,7 @@ void MidiMizeForm::on_osc2TriRbutton_toggled(bool checked)
         if(QtWrap.synth[1]->synthOn && QtWrap.solo)
         {
             QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-            QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 50);
+            QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
         }
     }
 }
@@ -350,7 +350,7 @@ void MidiMizeForm::on_osc2SawRbutton_toggled(bool checked)
         if(QtWrap.synth[1]->synthOn && QtWrap.solo)
         {
             QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-            QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 50);
+            QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
         }
     }
 }
@@ -518,26 +518,6 @@ void MidiMizeForm::on_midiRbutton_clicked(bool checked)
 {
     if(checked)
     {
-        /* TURN OFF LED's AND SOUND FROM SOLO MODE */
-        if(QtWrap.synth[0]->synthOn)
-        {
-            ledCommand_t cmd={55, OSC_1_OFF};
-            QtWrap.led_ctrl->pushBuffer(cmd);
-            QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-            QtWrap.synth[1]->setOscillator();
-            system("aconnect 24 128");
-            system("aconnect 24 130");
-        }
-        if(QtWrap.synth[1]->synthOn)
-        {
-            ledCommand_t cmd={55, OSC_2_OFF};
-            QtWrap.led_ctrl->pushBuffer(cmd);
-            QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-            QtWrap.synth[1]->setOscillator();
-            system("aconnect 24 129");
-            system("aconnect 24 131");
-        }
-
         /* CHANGE TO MIDI MODE */
         QtWrap.solo=false;
 
@@ -545,6 +525,31 @@ void MidiMizeForm::on_midiRbutton_clicked(bool checked)
         QtWrap.synth[1]->init_midi();
         init_osc1Led_midi();
         init_osc2Led_midi();
+
+        /* TURN OFF LED's AND SOUND FROM SOLO MODE */
+        if(QtWrap.synth[0]->synthOn)
+        {
+            system("aconnect 24 128");
+            system("aconnect 24 130");
+            ledCommand_t cmd={55, OSC_1_OFF};
+            QtWrap.led_ctrl->pushBuffer(cmd);
+            QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
+            //QtWrap.synth[0]->current_note=0;
+            QtWrap.synth[0]->setOscillator();
+
+        }
+        if(QtWrap.synth[1]->synthOn)
+        {
+            system("aconnect 24 129");
+            system("aconnect 24 131");
+            ledCommand_t cmd={55, OSC_2_OFF};
+            QtWrap.led_ctrl->pushBuffer(cmd);
+            QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
+            //QtWrap.synth[1]->current_note=0;
+            QtWrap.synth[1]->setOscillator();
+
+        }
+
     }
 }
 /*****************************************************************/
@@ -575,9 +580,12 @@ void MidiMizeForm::on_soloRbutton_clicked(bool checked)
 
         if(QtWrap.synth[0]->synthOn)
         {
-            ledCommand_t cmd={QtWrap.synth[0]->current_note, OSC_1_BLK};
-            QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 50);
-            QtWrap.led_ctrl->pushBuffer(cmd);
+            QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
+            if(QtWrap.synth[0]->current_note!=0)
+            {
+                ledCommand_t cmd={QtWrap.synth[0]->current_note, OSC_1_BLK};
+                QtWrap.led_ctrl->pushBuffer(cmd);
+            }
         }
 
         if(QtWrap.synth[1]->synthOn==false)
@@ -589,11 +597,13 @@ void MidiMizeForm::on_soloRbutton_clicked(bool checked)
         {
             if(QtWrap.synth[1]->synthOn)
             {
-                ledCommand_t cmd={QtWrap.synth[1]->current_note, OSC_2_BLK};
-                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 50);
-                QtWrap.led_ctrl->pushBuffer(cmd);
+                QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
+                if(QtWrap.synth[1]->current_note!=0)
+                {
+                    ledCommand_t cmd={QtWrap.synth[1]->current_note, OSC_2_BLK};
+                    QtWrap.led_ctrl->pushBuffer(cmd);
+                }
             }
-
         }
     }
 
@@ -607,17 +617,21 @@ void MidiMizeForm::kbrdKeyOn(noteNames note)
 {
     if(QtWrap.solo) // SOLO mode
     {
-        if(QtWrap.synth[0]->synthOn && QtWrap.synth[0]->current_note==0)
+        if(QtWrap.synth[0]->current_note==0 && QtWrap.synth[0]->synthOn)
+            QtWrap.synth[0]->current_note=note;
+
+        if(QtWrap.synth[1]->current_note==0 && QtWrap.synth[1]->synthOn)
+            QtWrap.synth[1]->current_note=note;
+
+        if(QtWrap.synth[0]->synthOn)
         {
-            QtWrap.synth[0]->current_note = note;
             QtWrap.synth[0]->noteOn(1, QtWrap.synth[0]->current_note, 80);
             ledCommand_t cmd={note, OSC_1_BLK};
             QtWrap.led_ctrl->pushBuffer(cmd);
         }
 
-        if(QtWrap.synth[1]->synthOn && QtWrap.synth[1]->current_note==0)
+        if(QtWrap.synth[1]->synthOn)
         {
-            QtWrap.synth[1]->current_note = note;
             QtWrap.synth[1]->noteOn(1, QtWrap.synth[1]->current_note, 80);
             ledCommand_t cmd={note, OSC_2_BLK};
             QtWrap.led_ctrl->pushBuffer(cmd);
@@ -632,21 +646,27 @@ void MidiMizeForm::kbrdKeyOff(noteNames note)
         if(QtWrap.synth[0]->current_note==note)
         {
             QtWrap.synth[0]->noteOff(1, QtWrap.synth[0]->current_note);
-            QtWrap.synth[0]->current_note=0;
             ledCommand_t cmd={note, OSC_1_OFF};
             QtWrap.led_ctrl->pushBuffer(cmd);
-            }
-    }
+            QtWrap.synth[0]->current_note=0;
+        }
 
-    if(QtWrap.synth[1]->current_note==note)
-    {
+
         if(QtWrap.synth[1]->current_note==note)
         {
             QtWrap.synth[1]->noteOff(1, QtWrap.synth[1]->current_note);
-            QtWrap.synth[1]->current_note=0;
             ledCommand_t cmd={note, OSC_2_OFF};
             QtWrap.led_ctrl->pushBuffer(cmd);
+            QtWrap.synth[1]->current_note=0;
         }
+    }
+    else
+    {
+        if(QtWrap.synth[0]->current_note==note)
+            QtWrap.synth[0]->current_note=0;
+
+        if(QtWrap.synth[1]->current_note==note)
+            QtWrap.synth[1]->current_note=0;
     }
 }
 

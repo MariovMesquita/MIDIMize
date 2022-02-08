@@ -189,7 +189,7 @@ void cSynth::setOscillator()
 
         case ANALOG:
             fluid_synth_sfload(this->FsSynth, this->sFonts[2].fileName, 1);
-            this->setGain(0.6);
+            this->setGain(0.5);
             break;
     }
 }
